@@ -68,7 +68,6 @@ public class CamerControls : MonoBehaviour
             if(canLerpSize)
             {
                 virtualCamera.m_Lens.OrthographicSize = Mathf.Lerp(initialOrthographicSize, targetOrthographicSize, t);
-                Debug.Log("OrthographicSize: " + virtualCamera.m_Lens.OrthographicSize);
             }
 
             if (canLerpSize)
@@ -88,9 +87,6 @@ public class CamerControls : MonoBehaviour
             {
                 framingTransposer.m_ScreenX  = Mathf.Lerp(screenStartX, screenX, t);
                 framingTransposer.m_ScreenY  = Mathf.Lerp(screenStartY, screenY, t);
-
-                Debug.Log("m_ScreenX: "+framingTransposer.m_ScreenX);
-                Debug.Log("m_ScreenY: "+framingTransposer.m_ScreenY);
             }
 
             if (Mathf.Approximately(virtualCamera.m_Lens.OrthographicSize, targetOrthographicSize))
