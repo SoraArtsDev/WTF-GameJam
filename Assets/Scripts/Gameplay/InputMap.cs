@@ -80,6 +80,24 @@ public partial class @InputMap: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""DialougueNext"",
+                    ""type"": ""Button"",
+                    ""id"": ""1c23dbde-a5e4-459c-9f62-21c92eac9b2d"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""DialougueSkip"",
+                    ""type"": ""Button"",
+                    ""id"": ""50c0cff2-d65a-416e-bbdc-3abbbd5e90bd"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -302,6 +320,50 @@ public partial class @InputMap: IInputActionCollection2, IDisposable
                     ""action"": ""ThrowObject"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""3be51b01-3af6-4d07-9c42-1a104ded171c"",
+                    ""path"": ""<Gamepad>/rightTrigger"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""DialougueNext"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""787051b7-b79e-4204-9a80-43951d78833d"",
+                    ""path"": ""<Keyboard>/tab"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""DialougueNext"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""b845ad73-4304-4766-b73a-4c016a5bd784"",
+                    ""path"": ""<Gamepad>/leftTrigger"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""DialougueSkip"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""76da9c86-d7f2-4d7c-88dc-e495d38dacd0"",
+                    ""path"": ""<Keyboard>/capsLock"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""DialougueSkip"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -316,6 +378,8 @@ public partial class @InputMap: IInputActionCollection2, IDisposable
         m_PlayerController_RemoveTorso = m_PlayerController.FindAction("RemoveTorso", throwIfNotFound: true);
         m_PlayerController_MoveObject = m_PlayerController.FindAction("MoveObject", throwIfNotFound: true);
         m_PlayerController_ThrowObject = m_PlayerController.FindAction("ThrowObject", throwIfNotFound: true);
+        m_PlayerController_DialougueNext = m_PlayerController.FindAction("DialougueNext", throwIfNotFound: true);
+        m_PlayerController_DialougueSkip = m_PlayerController.FindAction("DialougueSkip", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -383,6 +447,8 @@ public partial class @InputMap: IInputActionCollection2, IDisposable
     private readonly InputAction m_PlayerController_RemoveTorso;
     private readonly InputAction m_PlayerController_MoveObject;
     private readonly InputAction m_PlayerController_ThrowObject;
+    private readonly InputAction m_PlayerController_DialougueNext;
+    private readonly InputAction m_PlayerController_DialougueSkip;
     public struct PlayerControllerActions
     {
         private @InputMap m_Wrapper;
@@ -393,6 +459,8 @@ public partial class @InputMap: IInputActionCollection2, IDisposable
         public InputAction @RemoveTorso => m_Wrapper.m_PlayerController_RemoveTorso;
         public InputAction @MoveObject => m_Wrapper.m_PlayerController_MoveObject;
         public InputAction @ThrowObject => m_Wrapper.m_PlayerController_ThrowObject;
+        public InputAction @DialougueNext => m_Wrapper.m_PlayerController_DialougueNext;
+        public InputAction @DialougueSkip => m_Wrapper.m_PlayerController_DialougueSkip;
         public InputActionMap Get() { return m_Wrapper.m_PlayerController; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -420,6 +488,12 @@ public partial class @InputMap: IInputActionCollection2, IDisposable
             @ThrowObject.started += instance.OnThrowObject;
             @ThrowObject.performed += instance.OnThrowObject;
             @ThrowObject.canceled += instance.OnThrowObject;
+            @DialougueNext.started += instance.OnDialougueNext;
+            @DialougueNext.performed += instance.OnDialougueNext;
+            @DialougueNext.canceled += instance.OnDialougueNext;
+            @DialougueSkip.started += instance.OnDialougueSkip;
+            @DialougueSkip.performed += instance.OnDialougueSkip;
+            @DialougueSkip.canceled += instance.OnDialougueSkip;
         }
 
         private void UnregisterCallbacks(IPlayerControllerActions instance)
@@ -442,6 +516,12 @@ public partial class @InputMap: IInputActionCollection2, IDisposable
             @ThrowObject.started -= instance.OnThrowObject;
             @ThrowObject.performed -= instance.OnThrowObject;
             @ThrowObject.canceled -= instance.OnThrowObject;
+            @DialougueNext.started -= instance.OnDialougueNext;
+            @DialougueNext.performed -= instance.OnDialougueNext;
+            @DialougueNext.canceled -= instance.OnDialougueNext;
+            @DialougueSkip.started -= instance.OnDialougueSkip;
+            @DialougueSkip.performed -= instance.OnDialougueSkip;
+            @DialougueSkip.canceled -= instance.OnDialougueSkip;
         }
 
         public void RemoveCallbacks(IPlayerControllerActions instance)
@@ -467,5 +547,7 @@ public partial class @InputMap: IInputActionCollection2, IDisposable
         void OnRemoveTorso(InputAction.CallbackContext context);
         void OnMoveObject(InputAction.CallbackContext context);
         void OnThrowObject(InputAction.CallbackContext context);
+        void OnDialougueNext(InputAction.CallbackContext context);
+        void OnDialougueSkip(InputAction.CallbackContext context);
     }
 }

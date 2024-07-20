@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using Sora.Events;
+using UnityEngine.InputSystem;
 
 namespace Sora.DialogueSystem
 {
@@ -30,10 +31,16 @@ namespace Sora.DialogueSystem
         [SerializeField] private TMP_Text dialogueText;
 
         private bool visited;
+        private CharacterController2D characterController;
+
 
         private void OnEnable()
         {
             // subscribe input event
+            characterController = GameObject.Find("player").GetComponent<CharacterController2D>();
+            characterController.EnsureInput();
+            characterController.inputMap.PlayerController.DialougueNext.started += OnNext;//tab/r2
+            characterController.inputMap.PlayerController.DialougueSkip.started += OnSkip;//cap/r1
         }
 
         private void OnTriggerEnter2D(Collider2D collision)
@@ -91,12 +98,12 @@ namespace Sora.DialogueSystem
             StartCoroutine(ResetDialogueCD());
         }
 
-        void OnNext()
+        void OnNext(InputAction.CallbackContext context)
         {
             next = true;
         }
 
-        void OnSkip()
+        void OnSkip(InputAction.CallbackContext context)
         {
             skip = true;
         }

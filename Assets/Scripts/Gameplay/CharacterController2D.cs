@@ -113,14 +113,7 @@ public class CharacterController2D : MonoBehaviour
         CharacterRigidBody = GetComponent<Rigidbody2D>();
         spriteRenderer = GetComponent<SpriteRenderer>();
 
-        inputMap = new InputMap();
-        inputMap.PlayerController.Enable();
-        inputMap.PlayerController.Jump.started += OnJump;
-        //inputMap.PlayerController.Dash.started += OnDash;
-        inputMap.PlayerController.RemoveTorso.started += OnRemoveTorso;
-        inputMap.PlayerController.MoveObject.canceled += OnMoveDone;
-        inputMap.PlayerController.MoveObject.started += OnMoveObject;
-        inputMap.PlayerController.ThrowObject.started += OnThrowObject;
+        EnsureInput();
 
         IsFacingRight = true;
         isJumping = false;
@@ -156,6 +149,22 @@ public class CharacterController2D : MonoBehaviour
         }
     }
 
+
+    public void EnsureInput()
+    {
+        if (inputMap == null)
+        {
+            inputMap = new InputMap();
+            inputMap.PlayerController.Enable();
+            inputMap.PlayerController.Jump.started += OnJump;
+            //inputMap.PlayerController.Dash.started += OnDash;
+            inputMap.PlayerController.RemoveTorso.started += OnRemoveTorso;
+            inputMap.PlayerController.MoveObject.canceled += OnMoveDone;
+            inputMap.PlayerController.MoveObject.started += OnMoveObject;
+            inputMap.PlayerController.ThrowObject.started += OnThrowObject;
+
+        }
+    }
 
     void OnJump(InputAction.CallbackContext context)
     {
