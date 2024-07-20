@@ -376,14 +376,14 @@ public class CharacterController2D : MonoBehaviour
 
     private bool CheckIfGrounded()
     {
-        Debug.Log("CheckIfGrounded");
+        //Debug.Log("CheckIfGrounded");
         Vector3 lineStart = transform.position + Vector3.down * hitOffset;
         Vector3 lineEnd = lineStart + Vector3.down * hitDistance;
         RaycastHit2D hit = Physics2D.Raycast(lineStart, Vector2.down, hitDistance);
     
         if (hit.collider != null) // && hit.collider.gameObject.layer == LayerMask.NameToLayer("Platform"))
         {
-            Debug.Log(hit.collider.gameObject.name);
+            //Debug.Log(hit.collider.gameObject.name);
             return true;
         }
         return false;
