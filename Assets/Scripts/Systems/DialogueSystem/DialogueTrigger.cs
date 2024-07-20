@@ -43,7 +43,6 @@ namespace Sora.DialogueSystem
                 visited = true;
                 dialogueCoroutine = StartCoroutine(ShowDialogue());
 
-                dialogueCanvas.SetActive(false);
                 if (fireEventOnCompletion)
                     dialogueEndEvent.InvokeEvent();
 
@@ -87,8 +86,6 @@ namespace Sora.DialogueSystem
             dialogueCanvas.SetActive(false);
             if (fireEventOnCompletion)
                 dialogueEndEvent.InvokeEvent();
-
-            StartCoroutine(ResetDialogueCD());
         }
 
         void OnNext()
