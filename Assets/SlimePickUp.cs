@@ -13,7 +13,5 @@ public class SlimePickUp : MonoBehaviour
         }
         //Debug.Log("slime pickup");
         Destroy(gameObject);
-
-
     }
 }

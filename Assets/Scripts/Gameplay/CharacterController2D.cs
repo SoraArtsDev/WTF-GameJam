@@ -93,6 +93,7 @@ public class CharacterController2D : MonoBehaviour
 
 
     //Detachables
+    public EPlayerState startingState;
     private SpriteRenderer spriteRenderer;
     public Sprite sprHead;
     public Sprite sprFullbody;
@@ -144,7 +145,7 @@ public class CharacterController2D : MonoBehaviour
         dragSpeedMultiplier = 1.0f;
 
         colliderSize = GetComponent<BoxCollider2D>().size;
-        SetPlayerState(EPlayerState.EHEAD);
+        SetPlayerState(startingState);
         isTorsoRemoved = true;
         var instantiatedTorso = GameObject.Find("torso");
         if (instantiatedTorso)
