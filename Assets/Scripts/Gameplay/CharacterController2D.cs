@@ -615,4 +615,8 @@ public class CharacterController2D : MonoBehaviour
         soulMult = new Vector2(multX, multX);
     }
 
+    public void SetPlayerState(EPlayerState state)
+    {
+        playerState = state;
+    }
 }
