@@ -8,6 +8,15 @@ public class CharacterController2D : MonoBehaviour
 
     private const float DEAD_ZONE = 0.27f;
 
+    public enum EPickableType
+    {
+        ENONE,
+        EHEAD,
+        EHANDS,
+        ETORSO,
+        ELEGS,
+        ESLIME,
+    };
 
     public enum EPlayerState
     {
@@ -659,5 +668,9 @@ public class CharacterController2D : MonoBehaviour
 
     public void SetDraggable(Transform draggableObj) {
         draggable = draggableObj;
+    }
+
+    public void SetPickable(Transform pickableObj) {
+
     }
 }
