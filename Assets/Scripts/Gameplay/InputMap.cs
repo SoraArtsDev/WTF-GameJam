@@ -53,6 +53,15 @@ public partial class @InputMap: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""RemoveTorso"",
+                    ""type"": ""Button"",
+                    ""id"": ""c75dfc09-2ee2-481e-b4cf-f622d2bb0906"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -209,6 +218,28 @@ public partial class @InputMap: IInputActionCollection2, IDisposable
                     ""action"": ""Dash"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""a54af51b-faf7-42e2-9e55-09578546cb03"",
+                    ""path"": ""<Gamepad>/buttonEast"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""RemoveTorso"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""cd8e602e-d1fd-4a2d-ad21-b533f40b3419"",
+                    ""path"": ""<Keyboard>/shift"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""RemoveTorso"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -220,6 +251,7 @@ public partial class @InputMap: IInputActionCollection2, IDisposable
         m_PlayerController_Movement = m_PlayerController.FindAction("Movement", throwIfNotFound: true);
         m_PlayerController_Jump = m_PlayerController.FindAction("Jump", throwIfNotFound: true);
         m_PlayerController_Dash = m_PlayerController.FindAction("Dash", throwIfNotFound: true);
+        m_PlayerController_RemoveTorso = m_PlayerController.FindAction("RemoveTorso", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -284,6 +316,7 @@ public partial class @InputMap: IInputActionCollection2, IDisposable
     private readonly InputAction m_PlayerController_Movement;
     private readonly InputAction m_PlayerController_Jump;
     private readonly InputAction m_PlayerController_Dash;
+    private readonly InputAction m_PlayerController_RemoveTorso;
     public struct PlayerControllerActions
     {
         private @InputMap m_Wrapper;
@@ -291,6 +324,7 @@ public partial class @InputMap: IInputActionCollection2, IDisposable
         public InputAction @Movement => m_Wrapper.m_PlayerController_Movement;
         public InputAction @Jump => m_Wrapper.m_PlayerController_Jump;
         public InputAction @Dash => m_Wrapper.m_PlayerController_Dash;
+        public InputAction @RemoveTorso => m_Wrapper.m_PlayerController_RemoveTorso;
         public InputActionMap Get() { return m_Wrapper.m_PlayerController; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -309,6 +343,9 @@ public partial class @InputMap: IInputActionCollection2, IDisposable
             @Dash.started += instance.OnDash;
             @Dash.performed += instance.OnDash;
             @Dash.canceled += instance.OnDash;
+            @RemoveTorso.started += instance.OnRemoveTorso;
+            @RemoveTorso.performed += instance.OnRemoveTorso;
+            @RemoveTorso.canceled += instance.OnRemoveTorso;
         }
 
         private void UnregisterCallbacks(IPlayerControllerActions instance)
@@ -322,6 +359,9 @@ public partial class @InputMap: IInputActionCollection2, IDisposable
             @Dash.started -= instance.OnDash;
             @Dash.performed -= instance.OnDash;
             @Dash.canceled -= instance.OnDash;
+            @RemoveTorso.started -= instance.OnRemoveTorso;
+            @RemoveTorso.performed -= instance.OnRemoveTorso;
+            @RemoveTorso.canceled -= instance.OnRemoveTorso;
         }
 
         public void RemoveCallbacks(IPlayerControllerActions instance)
@@ -344,5 +384,6 @@ public partial class @InputMap: IInputActionCollection2, IDisposable
         void OnMovement(InputAction.CallbackContext context);
         void OnJump(InputAction.CallbackContext context);
         void OnDash(InputAction.CallbackContext context);
+        void OnRemoveTorso(InputAction.CallbackContext context);
     }
 }

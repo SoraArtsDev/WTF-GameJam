@@ -30,11 +30,19 @@ MonoBehaviour:
   jumpHangTimeThreshold: 0
   jumpHangAccelerationMultiplier: 1
   jumpHangMaxSpeedMultiplier: 1
+  hopHeight: 1.8
+  hopTimeToApex: 0.3
+  hopCutGravityMultiplier: 2.5
+  nextHopWaitTime: 0.5
+  hopDistanceX: 0.8
+  hopDistanceY: 1
   jumpLandGravityMultiplier: 0
   jumpLandTimeThreshold: -6.5
   jumpLandAccelerationMultiplier: 0.5
   jumpLandMaxSpeedMultiplier: 0.5
   jumpForce: 11.999999
+  hopForceX: 5.333333
+  hopForceY: 6.6666665
   dashDistanceX: 0.42
   dashDistanceY: 0.51
   dashDistance: 0.66
@@ -47,3 +55,5 @@ MonoBehaviour:
   jumpPressBufferTime: 0.2
   dashPressedBufferTime: 0.2
   softLanding: 0
+  torsoThrowForce: 3
+  torsoThrowTorque: 0.3

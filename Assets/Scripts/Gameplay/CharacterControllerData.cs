@@ -41,6 +41,16 @@ public class CharacterControllerData : ScriptableObject
     public float jumpHangAccelerationMultiplier;
     public float jumpHangMaxSpeedMultiplier;
 
+
+    [Header("Hop")]
+    public float hopHeight; //Height of the player's jump
+    public float hopTimeToApex; //Time between applying the jump force and reaching the desired jump height. These values also control the player's gravity and jump force.
+    public float hopCutGravityMultiplier; //Multiplier to increase gravity if the player releases the jump button while still jumping
+    public float nextHopWaitTime; //wait before next Hop
+    public float hopDistanceX; 
+    public float hopDistanceY; 
+
+
     [Space(0.5f)]
     [Range(0f, 1)]
     public float jumpLandGravityMultiplier; //Reduces gravity while close to the apex (desired max height) of the jump
@@ -50,6 +60,8 @@ public class CharacterControllerData : ScriptableObject
 
     [HideInInspector]
     public float jumpForce; //The actual force applied (upwards) to the player when they jump.
+    public float hopForceX; //The actual force applied (upwards) to the player when they jump.
+    public float hopForceY; //The actual force applied (upwards) to the player when they jump.
 
 
     [Header("Dash")]
@@ -74,6 +86,11 @@ public class CharacterControllerData : ScriptableObject
     public float dashPressedBufferTime; //this is bufferedTime used for dash input.
     public bool softLanding; //this is bufferedTime used for Jumps nad inputs.
 
+
+    [Header("Detachables")]
+    public float torsoThrowForce; 
+    public float torsoThrowTorque; 
+
     private void OnValidate()
     {
         //Calculate gravity strength using the formula (gravity = 2 * jumpHeight / timeToJumpApex^2) 
@@ -90,19 +107,25 @@ public class CharacterControllerData : ScriptableObject
         jumpForce = Mathf.Abs(gravityStrength) * jumpTimeToApex;
 
 
+        float strength = (2 * hopDistanceX) / (hopTimeToApex * hopTimeToApex);
+        hopForceX = Mathf.Abs(strength) * hopTimeToApex;
+        strength = -(2 * hopDistanceY) / (hopTimeToApex * hopTimeToApex);
+        hopForceY = Mathf.Abs(strength) * hopTimeToApex;
+        //hopForceY = Mathf.Abs(gravityStrength) * jumpTimeToApex;
+
         /*
-         * f = ma
-         * d = v0 + 1/2 *a*t^2 // assuming v0  = 0
-         * a = 2*d/t^2
-         * f = 2*d/t^2
-         */
+        * f = ma
+        * d = v0 + 1/2 *a*t^2 // assuming v0  = 0
+        * a = 2*d/t^2
+        * f = 2*d/t^2
+        */
         float strengthX = (2 * dashDistanceX) / (dashTimeToApex* dashTimeToApex);
         dashForceX = Mathf.Abs(strengthX) * dashTimeToApex;
 
         float strengthY = (2 * dashDistanceY) / (dashTimeToApex * dashTimeToApex);
         dashForceY = Mathf.Abs(strengthY) * dashTimeToApex;
 
-        float strength = (2 * dashDistance) / (dashTimeToApex * dashTimeToApex);
+        strength = (2 * dashDistance) / (dashTimeToApex * dashTimeToApex);
         dashForce = Mathf.Abs(strength) * dashTimeToApex;
         #region Variable Ranges
         runAcceleration = Mathf.Clamp(runAcceleration, 0.01f, maxRunSpeed);
