@@ -8,6 +8,15 @@ public class CharacterController2D : MonoBehaviour
 
     private const float DEAD_ZONE = 0.27f;
 
+    public enum EPickableType
+    {
+        ENONE,
+        EHEAD,
+        EHANDS,
+        ETORSO,
+        ELEGS,
+        ESLIME,
+    };
 
     public enum EPlayerState
     {
@@ -105,6 +114,7 @@ public class CharacterController2D : MonoBehaviour
 
     //Interactables
     private Transform draggable;
+    private Transform pickable;
     private float dragSpeedMultiplier;
 
     // Start is called before the first frame update
@@ -180,6 +190,18 @@ public class CharacterController2D : MonoBehaviour
 
     void OnRemoveTorso(InputAction.CallbackContext context)
     {
+
+        if(pickable)
+        {
+            pickable.GetComponent<Pickables>().Consume();
+            return;
+        }
+
+        if (playerState == EPlayerState.ESOUL)
+        {
+            return;
+        }
+
         if(playerState == EPlayerState.EHEAD)
         {
             Vector3 distance = transform.position - instantiatedTorso.transform.position;
@@ -239,7 +261,8 @@ public class CharacterController2D : MonoBehaviour
         if(playerState== EPlayerState.ESOUL)
         {
             moveInput = inputMap.PlayerController.Movement.ReadValue<Vector2>();
-
+            if (moveInput.x != 0)
+                SwitchPlayerDirection(moveInput.x > 0);
             Vector3 pos = transform.position;
             CharacterRigidBody.MovePosition(new Vector2(pos.x + soulMult.x*moveInput.x*controllerData.speedXForSoul * Time.deltaTime, pos.y + soulMult.y * moveInput.y * controllerData.speedXForSoul * Time.deltaTime));
             SetGravityScale(controllerData.soulGravityMultiplier);
@@ -659,5 +682,10 @@ public class CharacterController2D : MonoBehaviour
 
     public void SetDraggable(Transform draggableObj) {
         draggable = draggableObj;
+    }
+
+    public void SetPickable(Transform pickableObj) {
+
+        pickable = pickableObj;
     }
 }
