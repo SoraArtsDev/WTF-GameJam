@@ -50,9 +50,9 @@ namespace Sora.DialogueSystem
                 visited = true;
                 dialogueCoroutine = StartCoroutine(ShowDialogue());
 
-                if (fireEventOnCompletion)
-                    dialogueEndEvent.InvokeEvent();
-
+                //if (fireEventOnCompletion)
+                //    dialogueEndEvent.InvokeEvent();
+                //
                 StartCoroutine(ResetDialogueCD());
             }
         }
@@ -61,16 +61,6 @@ namespace Sora.DialogueSystem
         {
             yield return new WaitForSecondsRealtime(dialogueReplayCD);
             visited = false;
-        }
-
-        private void Update()
-        {
-            if(skip)
-            {
-                StopCoroutine(dialogueCoroutine);
-                skip = false;
-
-            }
         }
 
         private IEnumerator ShowDialogue()
@@ -102,7 +92,13 @@ namespace Sora.DialogueSystem
 
         void OnSkip(InputAction.CallbackContext context)
         {
-            skip = true;
+            if (dialogueCanvas.activeSelf)
+            {
+                StopCoroutine(dialogueCoroutine);
+                dialogueCanvas.SetActive(false);
+                if (fireEventOnCompletion)
+                    dialogueEndEvent.InvokeEvent();
+            }
         }
     }
 }

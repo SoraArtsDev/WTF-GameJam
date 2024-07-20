@@ -642,7 +642,7 @@ public class CharacterController2D : MonoBehaviour
 
     public void SetSoulMult(int multX=0, int multY = 0)
     {
-        soulMult = new Vector2(multX, multX);
+        soulMult = new Vector2(multX, multY);
     }
 
     public void SetPlayerState(EPlayerState state)
