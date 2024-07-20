@@ -48,7 +48,9 @@ namespace Sora.DialogueSystem
             if (!visited)
             {
                 visited = true;
-                dialogueCoroutine = StartCoroutine(ShowDialogue());
+                List<string> _dialogues = new List<string>();
+                _dialogues = dialogues;
+                dialogueCoroutine = StartCoroutine(ShowDialogue(_dialogues));
 
                 //if (fireEventOnCompletion)
                 //    dialogueEndEvent.InvokeEvent();
@@ -63,10 +65,10 @@ namespace Sora.DialogueSystem
             visited = false;
         }
 
-        private IEnumerator ShowDialogue()
+        private IEnumerator ShowDialogue(List<string> aDialogues)
         {
             dialogueCanvas.SetActive(true);
-            foreach(string dialogue in dialogues)
+            foreach(string dialogue in aDialogues)
             {
                 next = false;
                 dialogueText.text = "";
@@ -77,7 +79,7 @@ namespace Sora.DialogueSystem
                     yield return new WaitForSecondsRealtime(0.03f);
                 }
 
-                yield return new WaitUntil(() => next == true);
+                yield return new WaitUntil(() => next);
             }
 
             dialogueCanvas.SetActive(false);
