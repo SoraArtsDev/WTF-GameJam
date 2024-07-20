@@ -146,7 +146,7 @@ public class CharacterController2D : MonoBehaviour
         colliderSize = GetComponent<BoxCollider2D>().size;
         SetPlayerState(EPlayerState.EHEAD);
         isTorsoRemoved = true;
-        var instantiatedTorso = GameObject.Find("torso")
+        var instantiatedTorso = GameObject.Find("torso");
         if (instantiatedTorso)
         {
             var rb = instantiatedTorso.GetComponent<Rigidbody2D>();
