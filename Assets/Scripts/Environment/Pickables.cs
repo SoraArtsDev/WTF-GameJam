@@ -27,4 +27,31 @@ public class Pickables : MonoBehaviour
         DebugDraw.DrawWireCircle(transform.position, transform.rotation, interactableTouchCheckRadius, isTouching ? Color.red : Color.white);
 #endif
     }
+
+    public void Consume()
+    {
+        switch (pickableType)
+        {
+            case CharacterController2D.EPickableType.ESLIME:
+                {
+                    if (Sora.Managers.GameManager.instance != null)
+                    {
+                        Sora.Managers.GameManager.instance.IncrementSlimeCount();
+                    }
+                }
+                break;
+            case CharacterController2D.EPickableType.EHEAD:
+                break;
+            case CharacterController2D.EPickableType.ELEGS:
+                break;
+            case CharacterController2D.EPickableType.EHANDS:
+                break;
+            case CharacterController2D.EPickableType.ETORSO:
+                break;
+            default:break;
+        }
+
+        GameObject.Destroy(gameObject);
+
+    }
 }
