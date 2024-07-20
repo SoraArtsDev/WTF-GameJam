@@ -15,7 +15,24 @@ namespace Sora.Managers
 {
     public class GameManager : Singleton<GameManager>
     {
+        int[] slimeCount = {0,1,2,3};
+        int currentSlimeCount = 0;
+
         [SerializeField] private BoolVariable isGameOver;
+
+        public void IncrementSlimeCount()
+        {
+            currentSlimeCount++;
+            Debug.Log("currentSlimeCount : " + currentSlimeCount);
+        }
+
+        public bool HaveCollectedRequiredSlime(int currentLevel)
+        {
+            Debug.Log("slimeCount[currentLevel] : " + slimeCount[currentLevel]);
+            Debug.Log("currentSlimeCount : " + currentSlimeCount);
+            return slimeCount[currentLevel] == currentSlimeCount;
+        }
+
         private void OnEnable()
         {
             DontDestroyOnLoad(gameObject);

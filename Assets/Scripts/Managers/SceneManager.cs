@@ -24,6 +24,8 @@ namespace Sora.Managers
         [SerializeField] private TMPro.TMP_Text loadingText;
         [SerializeField] private UnityEngine.UI.Image loadingBar;
 
+        public int currentSceneIndex=0;
+
         private void OnEnable()
         {
             DontDestroyOnLoad(gameObject);
@@ -37,7 +39,14 @@ namespace Sora.Managers
 
         public void LoadGameScene(int sceneIndex)
         {
+            Debug.Log("Current scene Index : " + sceneIndex);
+            currentSceneIndex = sceneIndex;
             StartCoroutine(LoadSceneAsync(sceneIndex));
+        }
+
+        public int GetcurrentSceneIndex()
+        {
+            return currentSceneIndex;
         }
 
         public IEnumerator LoadSceneAsync(int sceneIndex)

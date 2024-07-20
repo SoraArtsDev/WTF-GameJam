@@ -13,6 +13,13 @@ public class DoorTrigger : MonoBehaviour
     {
         if(!isOpened)
         {
+            if(Sora.Managers.GameManager.instance != null && Sora.Managers.SceneManager.instance!=null)
+            {
+                if(Sora.Managers.GameManager.instance.HaveCollectedRequiredSlime(Sora.Managers.SceneManager.instance.GetcurrentSceneIndex()) == false)
+                {
+                    return;
+                }
+            }
             door.transform.position += new Vector3(0, 4, 0);
             isOpened = true;
         }
