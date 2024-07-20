@@ -5,6 +5,7 @@ using UnityEngine;
 public class Draggables : MonoBehaviour
 {
     bool isTouchingPlayer;
+    public float interactableTouchCheckRadius;
     CharacterController2D controller;
 
     // Start is called before the first frame update
@@ -16,15 +17,14 @@ public class Draggables : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
-    }
+        Vector3 distance = transform.parent.position - controller.transform.position;
+        isTouchingPlayer = distance.sqrMagnitude < interactableTouchCheckRadius * interactableTouchCheckRadius;
+        controller.SetDraggable(isTouchingPlayer ? transform.parent : null);
 
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-        if(collision.gameObject.tag == "Player")
-        {
-            Debug.Log("Touching Player");
-            //controller.SetDraggable();
-        }
+#if UNITY_EDITOR
+        distance = transform.parent.position - controller.transform.position;
+        bool isTouching = distance.sqrMagnitude < interactableTouchCheckRadius * interactableTouchCheckRadius;
+        DebugDraw.DrawWireCircle(transform.position, transform.rotation, interactableTouchCheckRadius, isTouching ? Color.red : Color.white);
+#endif
     }
 }

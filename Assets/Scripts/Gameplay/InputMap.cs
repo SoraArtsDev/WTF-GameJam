@@ -71,6 +71,15 @@ public partial class @InputMap: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""ThrowObject"",
+                    ""type"": ""Button"",
+                    ""id"": ""735ad388-08b5-4b8a-ac38-f02f56ada8f7"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -271,6 +280,28 @@ public partial class @InputMap: IInputActionCollection2, IDisposable
                     ""action"": ""MoveObject"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""9fd16990-d4bf-409e-903a-4d6e204046c1"",
+                    ""path"": ""<Gamepad>/buttonWest"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""ThrowObject"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""f87c1f31-e2ff-4c18-8b28-cf625d39aca5"",
+                    ""path"": ""<Keyboard>/o"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""ThrowObject"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -284,6 +315,7 @@ public partial class @InputMap: IInputActionCollection2, IDisposable
         m_PlayerController_Dash = m_PlayerController.FindAction("Dash", throwIfNotFound: true);
         m_PlayerController_RemoveTorso = m_PlayerController.FindAction("RemoveTorso", throwIfNotFound: true);
         m_PlayerController_MoveObject = m_PlayerController.FindAction("MoveObject", throwIfNotFound: true);
+        m_PlayerController_ThrowObject = m_PlayerController.FindAction("ThrowObject", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -350,6 +382,7 @@ public partial class @InputMap: IInputActionCollection2, IDisposable
     private readonly InputAction m_PlayerController_Dash;
     private readonly InputAction m_PlayerController_RemoveTorso;
     private readonly InputAction m_PlayerController_MoveObject;
+    private readonly InputAction m_PlayerController_ThrowObject;
     public struct PlayerControllerActions
     {
         private @InputMap m_Wrapper;
@@ -359,6 +392,7 @@ public partial class @InputMap: IInputActionCollection2, IDisposable
         public InputAction @Dash => m_Wrapper.m_PlayerController_Dash;
         public InputAction @RemoveTorso => m_Wrapper.m_PlayerController_RemoveTorso;
         public InputAction @MoveObject => m_Wrapper.m_PlayerController_MoveObject;
+        public InputAction @ThrowObject => m_Wrapper.m_PlayerController_ThrowObject;
         public InputActionMap Get() { return m_Wrapper.m_PlayerController; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -383,6 +417,9 @@ public partial class @InputMap: IInputActionCollection2, IDisposable
             @MoveObject.started += instance.OnMoveObject;
             @MoveObject.performed += instance.OnMoveObject;
             @MoveObject.canceled += instance.OnMoveObject;
+            @ThrowObject.started += instance.OnThrowObject;
+            @ThrowObject.performed += instance.OnThrowObject;
+            @ThrowObject.canceled += instance.OnThrowObject;
         }
 
         private void UnregisterCallbacks(IPlayerControllerActions instance)
@@ -402,6 +439,9 @@ public partial class @InputMap: IInputActionCollection2, IDisposable
             @MoveObject.started -= instance.OnMoveObject;
             @MoveObject.performed -= instance.OnMoveObject;
             @MoveObject.canceled -= instance.OnMoveObject;
+            @ThrowObject.started -= instance.OnThrowObject;
+            @ThrowObject.performed -= instance.OnThrowObject;
+            @ThrowObject.canceled -= instance.OnThrowObject;
         }
 
         public void RemoveCallbacks(IPlayerControllerActions instance)
@@ -426,5 +466,6 @@ public partial class @InputMap: IInputActionCollection2, IDisposable
         void OnDash(InputAction.CallbackContext context);
         void OnRemoveTorso(InputAction.CallbackContext context);
         void OnMoveObject(InputAction.CallbackContext context);
+        void OnThrowObject(InputAction.CallbackContext context);
     }
 }

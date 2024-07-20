@@ -97,6 +97,11 @@ public class CharacterControllerData : ScriptableObject
     public float torsoThrowForce; 
     public float torsoThrowTorque; 
 
+    [Header("Draggable")]
+    public float speedForDrag;
+    public float dragSpeedPullMultiplier;
+    public float dragSpeedPushMultiplier;
+
     private void OnValidate()
     {
         //Calculate gravity strength using the formula (gravity = 2 * jumpHeight / timeToJumpApex^2) 
