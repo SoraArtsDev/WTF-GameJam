@@ -15,7 +15,7 @@ namespace Sora.Managers
 {
     public class GameManager : Singleton<GameManager>
     {
-        [SerializeField] private BoolVariable isGameOver;
+        [SerializeField] private bool isGameOver;
         private void OnEnable()
         {
             DontDestroyOnLoad(gameObject);
@@ -28,7 +28,8 @@ namespace Sora.Managers
 
         public void OnGameOver(Component Invoker, object data)
         {
-            isGameOver.value = true;
+            isGameOver = true;
+            Application.Quit();
             SceneManager.instance.LoadGameScene(2);
         }
     }

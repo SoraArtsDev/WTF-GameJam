@@ -126,7 +126,6 @@ public class CharacterController2D : MonoBehaviour
         isIdle = true;
 
         gravityScale = EGravityScale.ENORMAL;
-        playerState = EPlayerState.ETORSO;
         lastState = playerState;
 
         lastOnGroundTime = 0.0f;

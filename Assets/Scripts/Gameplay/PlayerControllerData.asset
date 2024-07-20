@@ -55,5 +55,8 @@ MonoBehaviour:
   jumpPressBufferTime: 0.2
   dashPressedBufferTime: 0.2
   softLanding: 0
+  speedXForSoul: 10
+  speedYForSoul: 10
+  soulGravityMultiplier: 0
   torsoThrowForce: 3
   torsoThrowTorque: 0.3

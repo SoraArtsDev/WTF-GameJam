@@ -9,6 +9,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using Sora.Events;
 
 namespace Sora.DialogueSystem
 {
@@ -16,6 +17,11 @@ namespace Sora.DialogueSystem
     {
         [SerializeField] private List<string> dialogues;
         [SerializeField] private float dialogueReplayCD;
+        [SerializeField] private bool fireEventOnCompletion;
+
+        [ShowIf("fireEventOnCompletion", true)]
+        [SerializeField] private SoraEvent dialogueEndEvent;
+
 
         [Space]
         [SerializeField] private GameObject dialogueCanvas;
@@ -48,14 +54,16 @@ namespace Sora.DialogueSystem
                 {
                     dialogueText.text += dialogue[i].ToString();
 
-                    yield return null;
+                    yield return new WaitForSecondsRealtime(0.03f);
                 }
 
-                dialogueText.text += "->";
-                yield return new WaitUntil(() => Input.GetKeyDown(KeyCode.Space));
+                yield return new WaitUntil(() => Input.GetKeyDown(KeyCode.Tab));
             }
 
             dialogueCanvas.SetActive(false);
+            if (fireEventOnCompletion)
+                dialogueEndEvent.InvokeEvent();
+
             StartCoroutine(ResetDialogueCD());
         }
     }
