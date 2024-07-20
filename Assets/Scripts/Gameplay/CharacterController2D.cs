@@ -273,7 +273,7 @@ public class CharacterController2D : MonoBehaviour
         }
 
 #endif
-        if (isTorsoRemoved)
+        if (isTorsoRemoved && instantiatedTorso)
         {
             var rb = instantiatedTorso.GetComponent<Rigidbody2D>();
             if (Mathf.Approximately(rb.velocity.y , 0.0f))
