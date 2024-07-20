@@ -34,14 +34,14 @@ MonoBehaviour:
   hopTimeToApex: 0.3
   hopCutGravityMultiplier: 2.5
   nextHopWaitTime: 0.5
-  hopDistanceX: 0.8
+  hopDistanceX: 0.5
   hopDistanceY: 1
   jumpLandGravityMultiplier: 0
   jumpLandTimeThreshold: -6.5
   jumpLandAccelerationMultiplier: 0.5
   jumpLandMaxSpeedMultiplier: 0.5
   jumpForce: 11.999999
-  hopForceX: 5.333333
+  hopForceX: 3.3333333
   hopForceY: 6.6666665
   dashDistanceX: 0.42
   dashDistanceY: 0.51

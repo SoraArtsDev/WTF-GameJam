@@ -8,9 +8,11 @@ public class CharacterController2D : MonoBehaviour
 
     private const float DEAD_ZONE = 0.27f;
 
+
     public enum EPlayerState
     {
         ENONE,
+        ESOUL,
         EHEAD,
         ETORSO,
         EHANDS,
@@ -39,6 +41,7 @@ public class CharacterController2D : MonoBehaviour
 
     public EGravityScale gravityScale;
     public EPlayerState  playerState;
+    public EPlayerState  lastState;
 
     private float lastOnGroundTime;
     private float lastJumpPressedTime;
@@ -82,6 +85,7 @@ public class CharacterController2D : MonoBehaviour
 
 
     private Vector2 colliderSize;
+    private Vector2 soulMult;
 
 
 
@@ -92,6 +96,9 @@ public class CharacterController2D : MonoBehaviour
     public GameObject torsoPrefab;
     public GameObject instantiatedTorso;
     public float detachedTorsoCheckRadius;
+
+
+
 
     // Start is called before the first frame update
     void Awake()
@@ -104,6 +111,7 @@ public class CharacterController2D : MonoBehaviour
         inputMap.PlayerController.Jump.started += OnJump;
         //inputMap.PlayerController.Dash.started += OnDash;
         inputMap.PlayerController.RemoveTorso.started += OnRemoveTorso;
+        inputMap.PlayerController.MoveObject.started += OnMoveObject;
 
         IsFacingRight = true;
         isJumping = false;
@@ -111,7 +119,7 @@ public class CharacterController2D : MonoBehaviour
         isTorsoRemoved = false;
         isTouchingDetachedTorso = false;
         isDashPressed = false;
-        isJumpReleased = false;
+        isJumpReleased = false; 
         isDashEnabled = true;
 
         isRunning = false; ;
@@ -119,8 +127,11 @@ public class CharacterController2D : MonoBehaviour
 
         gravityScale = EGravityScale.ENORMAL;
         playerState = EPlayerState.ETORSO;
+        lastState = playerState;
+
         lastOnGroundTime = 0.0f;
         lastJumpPressedTime = 0.0f;
+        soulMult = Vector2.zero;
 
         colliderSize = GetComponent<BoxCollider2D>().size;
     }
@@ -168,9 +179,35 @@ public class CharacterController2D : MonoBehaviour
         }
         ConfigureTorso();
     }
+
+
+    void OnMoveObject(InputAction.CallbackContext context)
+    {
+       // Vector3 distance = transform.position - instantiatedTorso.transform.position;
+       // bool isTouching = distance.sqrMagnitude < detachedTorsoCheckRadius * detachedTorsoCheckRadius;
+       // if (!isTouching)
+       //     return;
+    }
+
+
     // Update is called once per frame
     void Update()
     {
+        if (lastState != playerState)
+        {
+            lastState = playerState;
+        }
+
+        if(playerState== EPlayerState.ESOUL)
+        {
+            moveInput = inputMap.PlayerController.Movement.ReadValue<Vector2>();
+
+            Vector3 pos = transform.position;
+            CharacterRigidBody.MovePosition(new Vector2(pos.x + soulMult.x*moveInput.x*controllerData.speedXForSoul * Time.deltaTime, pos.y + soulMult.y * moveInput.y * controllerData.speedXForSoul * Time.deltaTime));
+            SetGravityScale(controllerData.soulGravityMultiplier);
+            return;
+        }
+
         lastOnGroundTime -= Time.deltaTime;
         lastJumpPressedTime -= Time.deltaTime;
         lastDashPressedTime -= Time.deltaTime;
@@ -571,4 +608,11 @@ public class CharacterController2D : MonoBehaviour
     {
         CharacterRigidBody.gravityScale = scale;
     }
+
+
+    public void SetSoulMult(int multX=0, int multY = 0)
+    {
+        soulMult = new Vector2(multX, multX);
+    }
+
 }

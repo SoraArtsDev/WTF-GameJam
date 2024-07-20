@@ -87,6 +87,12 @@ public class CharacterControllerData : ScriptableObject
     public bool softLanding; //this is bufferedTime used for Jumps nad inputs.
 
 
+    [Header("SouldSpeed")]
+    public float speedXForSoul;
+    public float speedYForSoul;
+    public float soulGravityMultiplier; //Multiplier to increase gravity if the player releases the jump button while still jumping
+
+
     [Header("Detachables")]
     public float torsoThrowForce; 
     public float torsoThrowTorque; 
