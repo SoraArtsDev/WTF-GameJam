@@ -55,7 +55,7 @@ public partial class @InputMap: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""RemoveTorso"",
+                    ""name"": ""Interact"",
                     ""type"": ""Button"",
                     ""id"": ""c75dfc09-2ee2-481e-b4cf-f622d2bb0906"",
                     ""expectedControlType"": ""Button"",
@@ -262,7 +262,7 @@ public partial class @InputMap: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""RemoveTorso"",
+                    ""action"": ""Interact"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -273,7 +273,7 @@ public partial class @InputMap: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""RemoveTorso"",
+                    ""action"": ""Interact"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -375,7 +375,7 @@ public partial class @InputMap: IInputActionCollection2, IDisposable
         m_PlayerController_Movement = m_PlayerController.FindAction("Movement", throwIfNotFound: true);
         m_PlayerController_Jump = m_PlayerController.FindAction("Jump", throwIfNotFound: true);
         m_PlayerController_Dash = m_PlayerController.FindAction("Dash", throwIfNotFound: true);
-        m_PlayerController_RemoveTorso = m_PlayerController.FindAction("RemoveTorso", throwIfNotFound: true);
+        m_PlayerController_Interact = m_PlayerController.FindAction("Interact", throwIfNotFound: true);
         m_PlayerController_MoveObject = m_PlayerController.FindAction("MoveObject", throwIfNotFound: true);
         m_PlayerController_ThrowObject = m_PlayerController.FindAction("ThrowObject", throwIfNotFound: true);
         m_PlayerController_DialougueNext = m_PlayerController.FindAction("DialougueNext", throwIfNotFound: true);
@@ -444,7 +444,7 @@ public partial class @InputMap: IInputActionCollection2, IDisposable
     private readonly InputAction m_PlayerController_Movement;
     private readonly InputAction m_PlayerController_Jump;
     private readonly InputAction m_PlayerController_Dash;
-    private readonly InputAction m_PlayerController_RemoveTorso;
+    private readonly InputAction m_PlayerController_Interact;
     private readonly InputAction m_PlayerController_MoveObject;
     private readonly InputAction m_PlayerController_ThrowObject;
     private readonly InputAction m_PlayerController_DialougueNext;
@@ -456,7 +456,7 @@ public partial class @InputMap: IInputActionCollection2, IDisposable
         public InputAction @Movement => m_Wrapper.m_PlayerController_Movement;
         public InputAction @Jump => m_Wrapper.m_PlayerController_Jump;
         public InputAction @Dash => m_Wrapper.m_PlayerController_Dash;
-        public InputAction @RemoveTorso => m_Wrapper.m_PlayerController_RemoveTorso;
+        public InputAction @Interact => m_Wrapper.m_PlayerController_Interact;
         public InputAction @MoveObject => m_Wrapper.m_PlayerController_MoveObject;
         public InputAction @ThrowObject => m_Wrapper.m_PlayerController_ThrowObject;
         public InputAction @DialougueNext => m_Wrapper.m_PlayerController_DialougueNext;
@@ -479,9 +479,9 @@ public partial class @InputMap: IInputActionCollection2, IDisposable
             @Dash.started += instance.OnDash;
             @Dash.performed += instance.OnDash;
             @Dash.canceled += instance.OnDash;
-            @RemoveTorso.started += instance.OnRemoveTorso;
-            @RemoveTorso.performed += instance.OnRemoveTorso;
-            @RemoveTorso.canceled += instance.OnRemoveTorso;
+            @Interact.started += instance.OnInteract;
+            @Interact.performed += instance.OnInteract;
+            @Interact.canceled += instance.OnInteract;
             @MoveObject.started += instance.OnMoveObject;
             @MoveObject.performed += instance.OnMoveObject;
             @MoveObject.canceled += instance.OnMoveObject;
@@ -507,9 +507,9 @@ public partial class @InputMap: IInputActionCollection2, IDisposable
             @Dash.started -= instance.OnDash;
             @Dash.performed -= instance.OnDash;
             @Dash.canceled -= instance.OnDash;
-            @RemoveTorso.started -= instance.OnRemoveTorso;
-            @RemoveTorso.performed -= instance.OnRemoveTorso;
-            @RemoveTorso.canceled -= instance.OnRemoveTorso;
+            @Interact.started -= instance.OnInteract;
+            @Interact.performed -= instance.OnInteract;
+            @Interact.canceled -= instance.OnInteract;
             @MoveObject.started -= instance.OnMoveObject;
             @MoveObject.performed -= instance.OnMoveObject;
             @MoveObject.canceled -= instance.OnMoveObject;
@@ -544,7 +544,7 @@ public partial class @InputMap: IInputActionCollection2, IDisposable
         void OnMovement(InputAction.CallbackContext context);
         void OnJump(InputAction.CallbackContext context);
         void OnDash(InputAction.CallbackContext context);
-        void OnRemoveTorso(InputAction.CallbackContext context);
+        void OnInteract(InputAction.CallbackContext context);
         void OnMoveObject(InputAction.CallbackContext context);
         void OnThrowObject(InputAction.CallbackContext context);
         void OnDialougueNext(InputAction.CallbackContext context);

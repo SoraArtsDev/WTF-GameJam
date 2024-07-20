@@ -168,7 +168,7 @@ public class CharacterController2D : MonoBehaviour
             inputMap.PlayerController.Enable();
             inputMap.PlayerController.Jump.started += OnJump;
             //inputMap.PlayerController.Dash.started += OnDash;
-            inputMap.PlayerController.RemoveTorso.started += OnRemoveTorso;
+            inputMap.PlayerController.Interact.started += OnInteraction;
             inputMap.PlayerController.MoveObject.canceled += OnMoveDone;
             inputMap.PlayerController.MoveObject.started += OnMoveObject;
             inputMap.PlayerController.ThrowObject.started += OnThrowObject;
@@ -188,9 +188,8 @@ public class CharacterController2D : MonoBehaviour
     }
 
 
-    void OnRemoveTorso(InputAction.CallbackContext context)
+    void OnInteraction(InputAction.CallbackContext context)
     {
-
         if(pickable)
         {
             pickable.GetComponent<Pickables>().Consume();
@@ -202,7 +201,9 @@ public class CharacterController2D : MonoBehaviour
             return;
         }
 
-        if(playerState == EPlayerState.EHEAD)
+
+
+      /*if(playerState == EPlayerState.EHEAD)
         {
             Vector3 distance = transform.position - instantiatedTorso.transform.position;
             bool isTouching = distance.sqrMagnitude < interactableTouchCheckRadius * interactableTouchCheckRadius;
@@ -223,7 +224,7 @@ public class CharacterController2D : MonoBehaviour
             instantiatedTorso.GetComponent<Rigidbody2D>().AddForce(direction * force, ForceMode2D.Impulse);
             instantiatedTorso.GetComponent<Rigidbody2D>().AddTorque(torque, ForceMode2D.Impulse);
         }
-        ConfigureTorso(isTorsoRemoved);
+        ConfigureTorso(isTorsoRemoved);*/
     }
 
     void OnMoveObject(InputAction.CallbackContext context)

@@ -33,7 +33,7 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "RemoveTorso",
+                    "name": "Interact",
                     "type": "Button",
                     "id": "c75dfc09-2ee2-481e-b4cf-f622d2bb0906",
                     "expectedControlType": "Button",
@@ -240,7 +240,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "RemoveTorso",
+                    "action": "Interact",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -251,7 +251,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "RemoveTorso",
+                    "action": "Interact",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
