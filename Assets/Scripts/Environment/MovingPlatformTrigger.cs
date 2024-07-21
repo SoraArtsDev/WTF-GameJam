@@ -14,10 +14,19 @@ namespace Sora.Environment
     public class MovingPlatformTrigger : MonoBehaviour
     {
         [SerializeField] private MovingPlatform pairedPlaform;
+        [SerializeField] private bool stopMovingOnExit;
+        
 
         private void OnTriggerEnter2D(Collider2D collision)
         {
-            pairedPlaform.StartMoving();
+            if(collision.CompareTag("Player"))
+                pairedPlaform.StartMoving();
+        }
+
+        private void OnTriggerExit2D(Collider2D collision)
+        {
+            if (collision.CompareTag("Player") && stopMovingOnExit)
+                pairedPlaform.StopMoving();
         }
     }
 }
