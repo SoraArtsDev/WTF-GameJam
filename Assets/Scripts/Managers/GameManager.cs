@@ -15,7 +15,7 @@ namespace Sora.Managers
 {
     public class GameManager : Singleton<GameManager>
     {
-        int[] slimeCount = { 0, 1, 2, 3 };
+        int[] slimeCount = { 1, 1, 2 };
         int currentSlimeCount = 0;
 
         [SerializeField] private BoolVariable isGameOver;
