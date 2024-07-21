@@ -5,13 +5,16 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/MainMenu.unity
     guid: 8c9cfa26abfee488c85f1582747f6a02
+  - enabled: 0
+    path: Assets/Scenes/GameOverScreen.unity
+    guid: 24a299c230d740241a4cc7b854a370a4
+  - enabled: 1
+    path: Assets/Scenes/SoulSceneOmkar.unity
+    guid: b478ffc885c23564aa8b14817a33109f
   - enabled: 1
     path: Assets/Scenes/GameScene.unity
     guid: 232ad443cf5c65740b367a2bc8583f00
-  - enabled: 1
-    path: Assets/Scenes/GameOverScreen.unity
-    guid: 24a299c230d740241a4cc7b854a370a4
   m_configObjects: {}
