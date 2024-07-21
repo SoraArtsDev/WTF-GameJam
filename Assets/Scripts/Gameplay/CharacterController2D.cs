@@ -292,6 +292,7 @@ public class CharacterController2D : MonoBehaviour
 
     void SetPlayerAnimationState(EAnimationState state)
     {
+
         if (previousAnimationState == state)
             return;
         previousAnimationState = currentAnimationState;
@@ -302,6 +303,7 @@ public class CharacterController2D : MonoBehaviour
                 {
                     animator.SetBool("moving", false);
                     animator.SetBool("hopping", false);
+                    animator.SetBool("throwHand", false);
                 }
                 break;
             case EAnimationState.EMOVING:
@@ -328,7 +330,7 @@ public class CharacterController2D : MonoBehaviour
             case EAnimationState.EHANDDETACH:
                 { 
                     // spriteRenderer.sprite = sprInteract;
-                    animator.SetTrigger("detachHand");
+                    animator.SetBool("throwHand",true);
                 }
                 break;
             default: break;
@@ -403,7 +405,16 @@ public class CharacterController2D : MonoBehaviour
                 break;
             case EPlayerState.E_FULL_BODY:
                 {
-                    // detach and seplayerState to ELEGS
+                    //detach and seplayerState to EHEAD
+                    Vector2 direction = new Vector2(moveInput.x * 0.1f, 1);
+                    instantiatedTorso = SpawnPrefab(torsoPrefab, ref direction);
+                    instantiatedTorso.name = "Torso";
+                    float force = Random.Range(1.5f, controllerData.torsoThrowForce);
+                    //float torque = Random.Range(.1f, controllerData.torsoThrowTorque);
+                    instantiatedTorso.GetComponent<Rigidbody2D>().AddForce(direction * force, ForceMode2D.Impulse);
+                    SetPlayerState(EPlayerState.ETORSO);
+                    hasWaitTime = true;
+                    StartCoroutine("SetDefferedState", .5f);
                 }
                 break;
             default: break;
@@ -516,15 +527,7 @@ public class CharacterController2D : MonoBehaviour
             } 
         }
 
-        if(isThrowingObject && handPrefab)
-        {
-            Vector2 direction = new Vector2(1,1);
-            var hand = SpawnPrefab(handPrefab, ref direction);
-            hand.GetComponent<Boomerang>().ThrowBoomerang(direction, CharacterRigidBody,controllerData);
-            isThrowingObject = false;
-        }
-
-        //Check if Grounded
+         //Check if Grounded
         if (!isJumping && !isDraggingObject)
         {
             if (CheckIfGrounded())
@@ -597,8 +600,8 @@ public class CharacterController2D : MonoBehaviour
         }
 
         isRunning = Mathf.Abs(CharacterRigidBody.velocity.x) > 0;
-        isIdle = !isThrowingObject && !isDraggingObject && !isRunning && !isJumping && !isJumpFalling && !isJumpCut && lastOnGroundTime > 0.1f;
-        if(!isJumpFalling && !isJumping)
+        isIdle = !isDraggingObject && !isRunning && !isJumping && !isJumpFalling && !isJumpCut && lastOnGroundTime > 0.1f;
+        if(!isJumpFalling && !isJumping && !isThrowingObject)
         {
             EAnimationState state = isRunning ? (playerState == EPlayerState.ETORSO? EAnimationState.EHOP: EAnimationState.EMOVING) : EAnimationState.EIDLE;
             SetPlayerAnimationState(state);
@@ -656,7 +659,7 @@ public class CharacterController2D : MonoBehaviour
 
     private void Run()
     {
-        if (isDashing || hasWaitTime)
+        if (isDashing || hasWaitTime || isThrowingObject)
             return;
 
         dragSpeedMultiplier = 1.0f;
@@ -807,7 +810,7 @@ public class CharacterController2D : MonoBehaviour
 
     private bool CanJump()
     {
-        return !isDraggingObject && !isJumping && lastOnGroundTime > 0.0f && playerState != EPlayerState.EHEAD && playerState != EPlayerState.ETORSO;
+        return !isThrowingObject && !isDraggingObject && !isJumping && lastOnGroundTime > 0.0f && playerState != EPlayerState.EHEAD && playerState != EPlayerState.ETORSO;
     }
 
     private bool CanHop()
@@ -881,5 +884,19 @@ public class CharacterController2D : MonoBehaviour
         spawnPoint += transform.position;
         var go = GameObject.Instantiate(prefab, spawnPoint, Quaternion.identity);
         return go;
+    }
+
+    public void ThrowBoomerang()
+    {
+        Vector2 direction = new Vector2(1, 1);
+        var hand = SpawnPrefab(handPrefab, ref direction);
+        hand.GetComponent<Collider2D>().isTrigger = true;
+        hand.GetComponent<Boomerang>().ThrowBoomerang(direction, CharacterRigidBody, controllerData);
+    }
+
+    public void DoneThrowingHand()
+    {
+        animator.SetBool("throwHand", false);
+        isThrowingObject = false;
     }
 }
