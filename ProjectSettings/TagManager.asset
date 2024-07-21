@@ -20,7 +20,7 @@ TagManager:
   - MovingPlatform
   - Torso
   - Boomerang
-  - 
+  - Enemy
   - 
   - 
   - 
@@ -52,4 +52,7 @@ TagManager:
     locked: 0
   - name: Foreground
     uniqueID: 2291295799
+    locked: 0
+  - name: Enemy
+    uniqueID: 2670474987
     locked: 0
