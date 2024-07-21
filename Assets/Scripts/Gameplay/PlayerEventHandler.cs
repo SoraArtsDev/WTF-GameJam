@@ -14,6 +14,8 @@ namespace Sora
     public class PlayerEventHandler : MonoBehaviour
     {
         private CharacterController2D characterController;
+        [SerializeField] private SpriteRenderer vent;
+        [SerializeField] private GameObject possessDialogues;
 
         private void OnEnable()
         {
@@ -35,5 +37,14 @@ namespace Sora
             characterController.SetSoulMult(1, 1);
         }
 
+        public void SetupVent()
+        {
+            if (vent)
+            {
+                vent.color = new Color(vent.color.r, vent.color.g, vent.color.b, 0.5f);
+                vent.GetComponent<Collider2D>().enabled = false;
+                possessDialogues.SetActive(true);
+            }
+        }
     }
 }

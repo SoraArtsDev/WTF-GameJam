@@ -47,6 +47,8 @@ public class CharacterController2D : MonoBehaviour
         EJUMP,
         EHANDDETACH,
         EIDLE,
+        EPULL,
+        EPUSH,
     }
 
     public CharacterControllerData controllerData;
@@ -122,6 +124,7 @@ public class CharacterController2D : MonoBehaviour
     private SpriteRenderer spriteRenderer;
     public Sprite sprHead;
     public Sprite sprFullbody;
+    public Sprite sprInteract;
     public GameObject torsoPrefab;
     public GameObject handPrefab;
     private GameObject instantiatedTorso;
@@ -132,6 +135,7 @@ public class CharacterController2D : MonoBehaviour
     private Transform draggable;
     private Transform pickable;
     private float dragSpeedMultiplier;
+    [SerializeField] private Sora.Events.SoraEvent picked;
 
 
     private Animator animator;
@@ -289,6 +293,7 @@ public class CharacterController2D : MonoBehaviour
 
     void SetPlayerAnimationState(EAnimationState state)
     {
+
         if (previousAnimationState == state)
             return;
         previousAnimationState = currentAnimationState;
@@ -299,6 +304,7 @@ public class CharacterController2D : MonoBehaviour
                 {
                     animator.SetBool("moving", false);
                     animator.SetBool("hopping", false);
+                    animator.SetBool("throwHand", false);
                 }
                 break;
             case EAnimationState.EMOVING:
@@ -316,8 +322,16 @@ public class CharacterController2D : MonoBehaviour
                     animator.SetTrigger("jump");
                 }
                 break;
-            case EAnimationState.EHANDDETACH:
+            case EAnimationState.EPULL:
                 {
+                   // spriteRenderer.sprite = sprInteract;
+                    animator.SetBool("interacting",true);
+                }
+                break;
+            case EAnimationState.EHANDDETACH:
+                { 
+                    // spriteRenderer.sprite = sprInteract;
+                    animator.SetBool("throwHand",true);
                 }
                 break;
             default: break;
@@ -354,9 +368,15 @@ public class CharacterController2D : MonoBehaviour
 
     void OnInteraction(InputAction.CallbackContext context)
     {
-        if(pickable)
+        if (pickable)
         {
             pickable.GetComponent<Pickables>().Consume();
+
+            if (pickable.TryGetComponent<Pickables>(out Pickables pick))
+            {
+                if(pick.pickableType == EPickableType.EHEAD && picked)
+                    picked.InvokeEvent();
+            }
             return;
         }
 
@@ -392,7 +412,16 @@ public class CharacterController2D : MonoBehaviour
                 break;
             case EPlayerState.E_FULL_BODY:
                 {
-                    // detach and seplayerState to ELEGS
+                    //detach and seplayerState to EHEAD
+                    Vector2 direction = new Vector2(moveInput.x * 0.1f, 1);
+                    instantiatedTorso = SpawnPrefab(torsoPrefab, ref direction);
+                    instantiatedTorso.name = "Torso";
+                    float force = Random.Range(1.5f, controllerData.torsoThrowForce);
+                    //float torque = Random.Range(.1f, controllerData.torsoThrowTorque);
+                    instantiatedTorso.GetComponent<Rigidbody2D>().AddForce(direction * force, ForceMode2D.Impulse);
+                    SetPlayerState(EPlayerState.ETORSO);
+                    hasWaitTime = true;
+                    StartCoroutine("SetDefferedState", .5f);
                 }
                 break;
             default: break;
@@ -414,7 +443,7 @@ public class CharacterController2D : MonoBehaviour
         if(draggable)
         {
             isDraggingObject = true;
-            Debug.Log("OnMoveObject");
+            SetPlayerAnimationState(EAnimationState.EPULL);
         }
     }
     
@@ -422,11 +451,16 @@ public class CharacterController2D : MonoBehaviour
     {
         isDraggingObject = false;
         draggable = null;
+
+        animator.StopPlayback();
+        animator.SetBool("interacting", false);
+        animator.SetBool("move", false);
     }
 
     void OnThrowObject(InputAction.CallbackContext context)
     {
         isThrowingObject = true;
+        SetPlayerAnimationState(EAnimationState.EHANDDETACH);
 
     }
     
@@ -490,23 +524,17 @@ public class CharacterController2D : MonoBehaviour
         if (isTorsoDetached && instantiatedTorso)
         {
             var rb = instantiatedTorso.GetComponent<Rigidbody2D>();
+            var col2d = instantiatedTorso.GetComponent<Collider2D>();
             if (Mathf.Approximately(rb.velocity.y , 0.0f))
             {
                 rb.velocity = Vector2.zero;
                 rb.isKinematic = true;
+                col2d.isTrigger = true;
                 instantiatedTorso = null;
             } 
         }
 
-        if(isThrowingObject && handPrefab)
-        {
-            Vector2 direction = new Vector2(1,1);
-            var hand = SpawnPrefab(handPrefab, ref direction);
-            hand.GetComponent<Boomerang>().ThrowBoomerang(direction, CharacterRigidBody,controllerData);
-            isThrowingObject = false;
-        }
-
-        //Check if Grounded
+         //Check if Grounded
         if (!isJumping && !isDraggingObject)
         {
             if (CheckIfGrounded())
@@ -580,7 +608,7 @@ public class CharacterController2D : MonoBehaviour
 
         isRunning = Mathf.Abs(CharacterRigidBody.velocity.x) > 0;
         isIdle = !isDraggingObject && !isRunning && !isJumping && !isJumpFalling && !isJumpCut && lastOnGroundTime > 0.1f;
-        if(!isJumpFalling && !isJumping)
+        if(!isJumpFalling && !isJumping && !isThrowingObject)
         {
             EAnimationState state = isRunning ? (playerState == EPlayerState.ETORSO? EAnimationState.EHOP: EAnimationState.EMOVING) : EAnimationState.EIDLE;
             SetPlayerAnimationState(state);
@@ -622,9 +650,13 @@ public class CharacterController2D : MonoBehaviour
 
     private void SwitchPlayerDirection(bool facingTowardsRight)
     {
-        if (facingTowardsRight == IsFacingRight)
+        if (facingTowardsRight == IsFacingRight && !isDraggingObject)
             return;
 
+        if(IsFacingRight && isDraggingObject)
+        {
+            return;
+        }
 
         Vector3 scale = transform.localScale;
         scale.x *= -1;
@@ -634,7 +666,7 @@ public class CharacterController2D : MonoBehaviour
 
     private void Run()
     {
-        if (isDashing || hasWaitTime)
+        if (isDashing || hasWaitTime || isThrowingObject)
             return;
 
         dragSpeedMultiplier = 1.0f;
@@ -785,7 +817,7 @@ public class CharacterController2D : MonoBehaviour
 
     private bool CanJump()
     {
-        return !isDraggingObject && !isJumping && lastOnGroundTime > 0.0f && playerState != EPlayerState.EHEAD && playerState != EPlayerState.ETORSO;
+        return !isThrowingObject && !isDraggingObject && !isJumping && lastOnGroundTime > 0.0f && playerState != EPlayerState.EHEAD && playerState != EPlayerState.ETORSO;
     }
 
     private bool CanHop()
@@ -845,6 +877,11 @@ public class CharacterController2D : MonoBehaviour
         pickable = pickableObj;
     }
 
+    public Transform GetPickable()
+    {
+        return pickable;
+    }
+
     GameObject SpawnPrefab(GameObject prefab, ref Vector2 direction)
     {
         direction = IsFacingRight ? Vector2.right : Vector2.left;
@@ -854,5 +891,19 @@ public class CharacterController2D : MonoBehaviour
         spawnPoint += transform.position;
         var go = GameObject.Instantiate(prefab, spawnPoint, Quaternion.identity);
         return go;
+    }
+
+    public void ThrowBoomerang()
+    {
+        Vector2 direction = new Vector2(1, 1);
+        var hand = SpawnPrefab(handPrefab, ref direction);
+        hand.GetComponent<Collider2D>().isTrigger = true;
+        hand.GetComponent<Boomerang>().ThrowBoomerang(direction, CharacterRigidBody, controllerData);
+    }
+
+    public void DoneThrowingHand()
+    {
+        animator.SetBool("throwHand", false);
+        isThrowingObject = false;
     }
 }
