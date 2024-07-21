@@ -1420,6 +1420,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Legs
       objectReference: {fileID: 0}
+    - target: {fileID: 7871328833263628714, guid: 7c5e6270b77451f4c865ebb0d6820465, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1518,7 +1522,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
   m_PlayOnAwake: 1
-  m_Volume: 1
+  m_Volume: 0.3
   m_Pitch: 1
   Loop: 1
   Mute: 0
