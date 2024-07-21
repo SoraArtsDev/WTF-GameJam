@@ -1056,6 +1056,10 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 959966620420394213, guid: 334c57274fe3ba944aa168a743dab7f2, type: 3}
+      propertyPath: handPrefab
+      value: 
+      objectReference: {fileID: 7871328833263628714, guid: d33c3a31213cf994eb398129e67546b7, type: 3}
+    - target: {fileID: 959966620420394213, guid: 334c57274fe3ba944aa168a743dab7f2, type: 3}
       propertyPath: sprInteract
       value: 
       objectReference: {fileID: -1109702736, guid: 012bb7c5e3460034a88c10790f91e42c, type: 3}
@@ -1230,6 +1234,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 579963846470971349, guid: 7a8bd8982b198274db0c740d8d1704d0, type: 3}
+      propertyPath: m_BodyType
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5698088314622669877, guid: 7a8bd8982b198274db0c740d8d1704d0, type: 3}
       propertyPath: pickableType
       value: 2
