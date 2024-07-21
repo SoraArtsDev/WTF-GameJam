@@ -39,21 +39,20 @@ public class DoorTrigger : MonoBehaviour
             elapsedTime += Time.deltaTime;
             float t = elapsedTime / duration;
             door.transform.position = Vector3.Lerp(startPos, finalPos, t);
-            //isOpened = true;
         }
     }
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (isOpened)
+        if (!isOpened)
         {
-            /*if (Sora.Managers.GameManager.instance != null)
+            if (Sora.Managers.GameManager.instance != null)
             {
                 if (Sora.Managers.GameManager.instance.HaveCollectedRequiredSlime() == false)
                 {
                     return;
                 }
-            }*/
+            }
             isOpened = true;
         }
 
