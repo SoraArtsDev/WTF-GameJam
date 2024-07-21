@@ -450,7 +450,7 @@ Camera:
   m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 2
-  m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
+  m_BackGroundColor: {r: 0.4245283, g: 0.4245283, b: 0.4245283, a: 0}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
   m_FOVAxisMode: 0
@@ -727,7 +727,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.38679248, g: 0.38679248, b: 0.38679248, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -1056,12 +1056,36 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 959966620420394213, guid: 334c57274fe3ba944aa168a743dab7f2, type: 3}
+      propertyPath: torsoPrefab
+      value: 
+      objectReference: {fileID: 7871328833263628714, guid: 7a8bd8982b198274db0c740d8d1704d0, type: 3}
+    - target: {fileID: 959966620420394213, guid: 334c57274fe3ba944aa168a743dab7f2, type: 3}
+      propertyPath: hitOffsetLegs
+      value: 0.7
+      objectReference: {fileID: 0}
+    - target: {fileID: 959966620420394213, guid: 334c57274fe3ba944aa168a743dab7f2, type: 3}
       propertyPath: startingState
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 959966620420394213, guid: 334c57274fe3ba944aa168a743dab7f2, type: 3}
       propertyPath: hitOffsetTorso
       value: 0.41
+      objectReference: {fileID: 0}
+    - target: {fileID: 959966620420394213, guid: 334c57274fe3ba944aa168a743dab7f2, type: 3}
+      propertyPath: headColliderSize.x
+      value: 0.14
+      objectReference: {fileID: 0}
+    - target: {fileID: 959966620420394213, guid: 334c57274fe3ba944aa168a743dab7f2, type: 3}
+      propertyPath: headColliderSize.y
+      value: 0.15
+      objectReference: {fileID: 0}
+    - target: {fileID: 959966620420394213, guid: 334c57274fe3ba944aa168a743dab7f2, type: 3}
+      propertyPath: legsColliderSize.x
+      value: 0.14
+      objectReference: {fileID: 0}
+    - target: {fileID: 959966620420394213, guid: 334c57274fe3ba944aa168a743dab7f2, type: 3}
+      propertyPath: legsColliderSize.y
+      value: 0.51
       objectReference: {fileID: 0}
     - target: {fileID: 959966620420394213, guid: 334c57274fe3ba944aa168a743dab7f2, type: 3}
       propertyPath: interactableTouchCheckRadius

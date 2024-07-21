@@ -41,10 +41,19 @@ public class Pickables : MonoBehaviour
                 }
                 break;
             case CharacterController2D.EPickableType.EHEAD:
+                {
+                    controller.SetPlayerState(CharacterController2D.EPlayerState.EHEAD);
+                }
                 break;
             case CharacterController2D.EPickableType.ELEGS:
+                {
+                    controller.SetPlayerState(CharacterController2D.EPlayerState.ELEGS);
+                }
                 break;
             case CharacterController2D.EPickableType.EHANDS:
+                {
+                    controller.SetPlayerState(CharacterController2D.EPlayerState.E_FULL_BODY);
+                }
                 break;
             case CharacterController2D.EPickableType.ETORSO:
                 {
