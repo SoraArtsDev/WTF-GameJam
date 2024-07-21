@@ -16,18 +16,19 @@ namespace Sora.Environment
     {
         public Vector3 position;
         public float haltDuration;
+        public float timeToThisWayPoint;
     }
 
     public class MovingPlatform : MonoBehaviour
     {
         [SerializeField] private WayPoint[] wayPoints;
-        [SerializeField] private float timeToNextWayPoint;
         [SerializeField] private bool moveOnAwake;
         
         private bool startMoving;
         private float currentTime;
         private Vector3 targetPosition;
         private int wayPointIndex;
+        private Vector3 initialPos;
 
         private void OnEnable()
         {
@@ -36,6 +37,7 @@ namespace Sora.Environment
             startMoving = moveOnAwake;
             currentTime = 0.0f;
 
+            initialPos = wayPoints[0].position;
             wayPointIndex = 1;
             targetPosition = wayPoints[wayPointIndex].position;
         }
@@ -43,8 +45,8 @@ namespace Sora.Environment
         private void Update()
         {
             if(startMoving)
-            {
-                transform.localPosition = Vector3.MoveTowards(transform.localPosition, targetPosition, currentTime / timeToNextWayPoint);
+            {                
+                transform.localPosition = Vector3.Lerp(initialPos, targetPosition, currentTime / wayPoints[wayPointIndex].timeToThisWayPoint);
 
                 currentTime += Time.deltaTime;
 
@@ -61,6 +63,7 @@ namespace Sora.Environment
         {
             yield return new WaitForSecondsRealtime(wayPoints[wayPointIndex].haltDuration);
             startMoving = true;
+            initialPos = wayPoints[wayPointIndex].position;
             wayPointIndex++;
             if (wayPointIndex == wayPoints.Length)
                 wayPointIndex = 0;
@@ -72,6 +75,11 @@ namespace Sora.Environment
         public void StartMoving()
         {
             startMoving = true;
+        }
+
+        public void StopMoving()
+        {
+            startMoving = false;
         }
     }
 }
