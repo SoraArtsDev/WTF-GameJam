@@ -26,13 +26,13 @@ public class TextManager : MonoBehaviour
             int totalReqSlime = Sora.Managers.GameManager.instance.GetRequiredSlimeCount();
             int currSlime = Sora.Managers.GameManager.instance.GetCurrentSlimeCount();
 
-            slimeCountText.text = currSlime.ToString() + " / " + totalReqSlime.ToString();
+            slimeCountText.text = "Slime Count : " + currSlime.ToString() + " / " + totalReqSlime.ToString();
         }
     }
 
     public void UpdateText(int currSlime, int totalReqSlime)
     {
-        slimeCountText.text = currSlime.ToString() + " / " + totalReqSlime.ToString();
+        slimeCountText.text = "Slime Count : " + currSlime.ToString() + " / " + totalReqSlime.ToString();
     }
 
     // Update is called once per frame
