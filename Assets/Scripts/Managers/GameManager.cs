@@ -15,19 +15,31 @@ namespace Sora.Managers
 {
     public class GameManager : Singleton<GameManager>
     {
-        int[] slimeCount = {0,1,2,3};
+        int[] slimeCount = { 0, 1, 2, 3 };
         int currentSlimeCount = 0;
 
         [SerializeField] private BoolVariable isGameOver;
 
+        public int GetCurrentSlimeCount()
+        {
+            return currentSlimeCount;
+        }
+
+        public int GetRequiredSlimeCount()
+        {
+            return slimeCount[SceneManager.instance.GetcurrentSceneIndex()];
+        }
         public void IncrementSlimeCount()
         {
+            
             currentSlimeCount++;
+            TextManager.instance.UpdateText(currentSlimeCount, GetRequiredSlimeCount());
             Debug.Log("currentSlimeCount : " + currentSlimeCount);
         }
 
-        public bool HaveCollectedRequiredSlime(int currentLevel)
+        public bool HaveCollectedRequiredSlime()
         {
+            int currentLevel = SceneManager.instance.GetcurrentSceneIndex();
             Debug.Log("slimeCount[currentLevel] : " + slimeCount[currentLevel]);
             Debug.Log("currentSlimeCount : " + currentSlimeCount);
             return slimeCount[currentLevel] == currentSlimeCount;
