@@ -19,8 +19,6 @@ namespace Sora.Managers
         int currentSlimeCount = 0;
         public int reloadLevelIndex;
 
-        [SerializeField] private BoolVariable isGameOver;
-
         public int GetCurrentSlimeCount()
         {
             return currentSlimeCount;
@@ -58,7 +56,6 @@ namespace Sora.Managers
 
         public void OnGameOver(Component Invoker, object data)
         {
-            isGameOver.value = true;
             Application.Quit();
             SceneManager.instance.LoadScene(reloadLevelIndex);
         }
