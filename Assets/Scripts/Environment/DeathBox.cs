@@ -17,7 +17,7 @@ namespace Sora.Environment
 
         private void OnTriggerEnter2D(Collider2D collision)
         {
-            Managers.GameManager.instance.CallGameOver();
+            //Managers.GameManager.instance.CallGameOver();
             collision.gameObject.SetActive(false);
         }
     }
