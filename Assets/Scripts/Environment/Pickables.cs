@@ -47,6 +47,9 @@ public class Pickables : MonoBehaviour
             case CharacterController2D.EPickableType.EHANDS:
                 break;
             case CharacterController2D.EPickableType.ETORSO:
+                {
+                    controller.SetPlayerState(CharacterController2D.EPlayerState.ETORSO);
+                }
                 break;
             default:break;
         }
