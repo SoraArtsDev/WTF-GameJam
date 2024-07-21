@@ -47,6 +47,8 @@ public class CharacterController2D : MonoBehaviour
         EJUMP,
         EHANDDETACH,
         EIDLE,
+        EPULL,
+        EPUSH,
     }
 
     public CharacterControllerData controllerData;
@@ -414,7 +416,7 @@ public class CharacterController2D : MonoBehaviour
         if(draggable)
         {
             isDraggingObject = true;
-            Debug.Log("OnMoveObject");
+            SetPlayerAnimationState(EAnimationState.EPULL);
         }
     }
     
