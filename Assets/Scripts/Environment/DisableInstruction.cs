@@ -16,15 +16,18 @@ namespace Sora
     public class DisableInstruction : MonoBehaviour
     {
         [SerializeField] private float durationToDisable;
+        private bool visited;
 
         private void OnEnable()
         {
-            StartCoroutine(DisableObject());
+            if(!visited)
+                StartCoroutine(DisableObject());
         }
 
         private IEnumerator DisableObject()
         {
             yield return new WaitForSecondsRealtime(durationToDisable);
+            visited = true;
             gameObject.SetActive(false);
         }
     }

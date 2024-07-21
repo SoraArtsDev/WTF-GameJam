@@ -847,6 +847,11 @@ public class CharacterController2D : MonoBehaviour
         pickable = pickableObj;
     }
 
+    public Transform GetPickable()
+    {
+        return pickable;
+    }
+
     GameObject SpawnPrefab(GameObject prefab, ref Vector2 direction)
     {
         direction = IsFacingRight ? Vector2.right : Vector2.left;

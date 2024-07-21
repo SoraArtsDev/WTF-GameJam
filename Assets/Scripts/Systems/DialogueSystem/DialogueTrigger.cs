@@ -54,8 +54,6 @@ namespace Sora.DialogueSystem
 
                 //if (fireEventOnCompletion)
                 //    dialogueEndEvent.InvokeEvent();
-                //
-                StartCoroutine(ResetDialogueCD());
             }
         }
 
@@ -100,6 +98,8 @@ namespace Sora.DialogueSystem
                 dialogueCanvas.SetActive(false);
                 if (fireEventOnCompletion)
                     dialogueEndEvent.InvokeEvent();
+
+                StartCoroutine(ResetDialogueCD());
             }
         }
     }

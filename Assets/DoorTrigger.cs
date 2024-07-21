@@ -13,9 +13,9 @@ public class DoorTrigger : MonoBehaviour
     {
         if(!isOpened)
         {
-            if(Sora.Managers.GameManager.instance != null && Sora.Managers.SceneManager.instance!=null)
+            if(Sora.Managers.GameManager.instance != null)
             {
-                if(Sora.Managers.GameManager.instance.HaveCollectedRequiredSlime(Sora.Managers.SceneManager.instance.GetcurrentSceneIndex()) == false)
+                if(Sora.Managers.GameManager.instance.HaveCollectedRequiredSlime() == false)
                 {
                     return;
                 }
