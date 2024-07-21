@@ -57,6 +57,7 @@ public class CharacterController2D : MonoBehaviour
     public float hitOffset;
     public float hitOffsetHead;
     public float hitOffsetTorso;
+    public float hitOffsetLegs;
     public float originalOffset;
 
 
@@ -111,6 +112,8 @@ public class CharacterController2D : MonoBehaviour
     private Vector2 colliderSize;
     private Vector2 soulMult;
     private Vector3 prevPosition;
+    public  Vector2 legsColliderSize;
+    public  Vector2 headColliderSize;
 
 
 
@@ -189,8 +192,9 @@ public class CharacterController2D : MonoBehaviour
                 break;
             case EPlayerState.EHEAD:
                 {
+                    ////.14,
                     isTorsoDetached = true;
-                    GetComponent<BoxCollider2D>().size = new Vector2(colliderSize.x, colliderSize.y / 2);
+                    GetComponent<BoxCollider2D>().size = new Vector2(headColliderSize.x, headColliderSize.y);
                     hitOffset = hitOffsetHead;
                     //spriteRenderer.sprite = sprHead;
                 }
@@ -204,17 +208,19 @@ public class CharacterController2D : MonoBehaviour
                 break;
             case EPlayerState.ELEGS:
                 {
-
+                    //.14
+                    GetComponent<BoxCollider2D>().size = new Vector2(legsColliderSize.x, legsColliderSize.y);
+                    hitOffset = hitOffsetLegs;
                 }
                 break;
             case EPlayerState.E_FULL_BODY:
                 {
-
+                    GetComponent<BoxCollider2D>().size = new Vector2(legsColliderSize.x, legsColliderSize.y);
+                    hitOffset = hitOffsetLegs;
                 }
                 break;
             default: break;
         }
-
         if (isTorsoDetached)
         {
             //this means we are expecting torso somehwere as pcikable in level
@@ -225,6 +231,8 @@ public class CharacterController2D : MonoBehaviour
 
     void SetPlayerAnimatorLayer()
     {
+        bool hasExitTime = false;
+        int layerIndex = 0;
         switch (playerState)
         {
             case EPlayerState.ESOUL:
@@ -234,6 +242,7 @@ public class CharacterController2D : MonoBehaviour
                     animator.SetLayerWeight(2, 0.0f);
                     animator.SetLayerWeight(3, 0.0f);
                     animator.SetLayerWeight(4, 0.0f);
+                    
                 }
                 break;
             case EPlayerState.EHEAD:
@@ -247,11 +256,13 @@ public class CharacterController2D : MonoBehaviour
                 break;
             case EPlayerState.ETORSO:
                 {
+                    hasExitTime = true;
                     animator.SetLayerWeight(0, 0.0f);
                     animator.SetLayerWeight(1, 0.0f);
                     animator.SetLayerWeight(2, 1.0f);
                     animator.SetLayerWeight(3, 0.0f);
                     animator.SetLayerWeight(4, 0.0f);
+                    layerIndex = 2;
                 }
                 break;
             case EPlayerState.ELEGS:
@@ -287,6 +298,7 @@ public class CharacterController2D : MonoBehaviour
             case EAnimationState.EIDLE:
                 {
                     animator.SetBool("moving", false);
+                    animator.SetBool("hopping", false);
                 }
                 break;
             case EAnimationState.EMOVING:
@@ -296,12 +308,12 @@ public class CharacterController2D : MonoBehaviour
                 break;
             case EAnimationState.EHOP:
                 {
-                    animator.SetBool("moving", true);
+                    animator.SetBool("hopping", true);
                 }
                 break;
             case EAnimationState.EJUMP:
                 {
-                    animator.SetTrigger("jumping");
+                    animator.SetTrigger("jump");
                 }
                 break;
             case EAnimationState.EHANDDETACH:
@@ -362,7 +374,6 @@ public class CharacterController2D : MonoBehaviour
             case EPlayerState.ETORSO:
                 {
                     //detach and seplayerState to EHEAD
-
                     Vector2 direction = new Vector2(moveInput.x * 0.1f, 1);
                     instantiatedTorso = SpawnPrefab(torsoPrefab, ref direction);
                     instantiatedTorso.name = "Torso";
@@ -371,6 +382,7 @@ public class CharacterController2D : MonoBehaviour
                     instantiatedTorso.GetComponent<Rigidbody2D>().AddForce(direction * force, ForceMode2D.Impulse);
                     SetPlayerState(EPlayerState.EHEAD);
                     hasWaitTime = true;
+                    StartCoroutine("SetDefferedState", .5f);
                 }
                 break;
             case EPlayerState.ELEGS:
@@ -385,30 +397,6 @@ public class CharacterController2D : MonoBehaviour
                 break;
             default: break;
         }
-
-        StartCoroutine("SetDefferedState", .5f);
-        /*if(playerState == EPlayerState.EHEAD)
-          {
-              Vector3 distance = transform.position - instantiatedTorso.transform.position;
-              bool isTouching = distance.sqrMagnitude < interactableTouchCheckRadius * interactableTouchCheckRadius;
-              if(!isTouching)
-                  return;
-          }
-
-          isTorsoDetached = !isTorsoDetached;
-          if (isTorsoDetached && playerState == EPlayerState.ETORSO)
-          {
-              Vector2 direction = new Vector2(moveInput.x * 0.1f, 1);
-              Vector3 spawnPoint = new Vector3(direction.x, 0, 0);
-              spawnPoint += transform.position;
-              direction.Normalize();
-              instantiatedTorso = GameObject.Instantiate(torsoPrefab, spawnPoint, Quaternion.identity);
-              float force = Random.Range(1.5f, controllerData.torsoThrowForce);
-              float torque = Random.Range(.1f, controllerData.torsoThrowTorque);
-              instantiatedTorso.GetComponent<Rigidbody2D>().AddForce(direction * force, ForceMode2D.Impulse);
-              instantiatedTorso.GetComponent<Rigidbody2D>().AddTorque(torque, ForceMode2D.Impulse);
-          }
-          ConfigureTorso(isTorsoDetached);*/
     }
 
 
@@ -433,7 +421,6 @@ public class CharacterController2D : MonoBehaviour
     void OnMoveDone(InputAction.CallbackContext context)
     {
         isDraggingObject = false;
-        Debug.Log("OnMoveDone");
         draggable = null;
     }
 
@@ -595,7 +582,8 @@ public class CharacterController2D : MonoBehaviour
         isIdle = !isDraggingObject && !isRunning && !isJumping && !isJumpFalling && !isJumpCut && lastOnGroundTime > 0.1f;
         if(!isJumpFalling && !isJumping)
         {
-            SetPlayerAnimationState(isRunning ? EAnimationState.EMOVING : EAnimationState.EIDLE);
+            EAnimationState state = isRunning ? (playerState == EPlayerState.ETORSO? EAnimationState.EHOP: EAnimationState.EMOVING) : EAnimationState.EIDLE;
+            SetPlayerAnimationState(state);
         }
         #endregion
     }
@@ -608,7 +596,7 @@ public class CharacterController2D : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (playerState == EPlayerState.EHEAD || playerState == EPlayerState.E_FULL_BODY)
+        if (playerState == EPlayerState.EHEAD || playerState == EPlayerState.E_FULL_BODY || playerState == EPlayerState.ELEGS)
             Run();
         else if (playerState == EPlayerState.ETORSO && CanHop())
         {
@@ -731,6 +719,7 @@ public class CharacterController2D : MonoBehaviour
         {
             Debug.Log("OnJump");
             CharacterRigidBody.AddForce(controllerData.jumpForce * Vector2.up, ForceMode2D.Impulse);
+            SetPlayerAnimationState(EAnimationState.EJUMP);
         }
 
     }
