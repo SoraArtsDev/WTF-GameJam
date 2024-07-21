@@ -19,8 +19,11 @@ namespace Sora
 
         private void OnTriggerEnter2D(Collider2D collision)
         {
-            collisionEvent.InvokeEvent();
-            gameObject.SetActive(false);
+            if (collision.CompareTag("Player"))
+            {
+                collisionEvent.InvokeEvent();
+                gameObject.SetActive(false);
+            }
         }
     }
 }

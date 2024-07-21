@@ -49,7 +49,12 @@ namespace Sora.Managers
             return currentSceneIndex;
         }
 
-        public IEnumerator LoadSceneAsync(int sceneIndex)
+        public void LoadScene(int index)
+        {
+            StartCoroutine(LoadSceneAsync(index));
+        }
+
+        private IEnumerator LoadSceneAsync(int sceneIndex)
         {
             AsyncOperation loadingOperation;
 

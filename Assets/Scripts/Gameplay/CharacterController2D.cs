@@ -135,6 +135,7 @@ public class CharacterController2D : MonoBehaviour
     private Transform draggable;
     private Transform pickable;
     private float dragSpeedMultiplier;
+    [SerializeField] private Sora.Events.SoraEvent picked;
 
 
     private Animator animator;
@@ -367,9 +368,15 @@ public class CharacterController2D : MonoBehaviour
 
     void OnInteraction(InputAction.CallbackContext context)
     {
-        if(pickable)
+        if (pickable)
         {
             pickable.GetComponent<Pickables>().Consume();
+
+            if (pickable.TryGetComponent<Pickables>(out Pickables pick))
+            {
+                if(pick.pickableType == EPickableType.EHEAD && picked)
+                    picked.InvokeEvent();
+            }
             return;
         }
 
