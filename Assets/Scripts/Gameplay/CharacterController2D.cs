@@ -898,6 +898,7 @@ public class CharacterController2D : MonoBehaviour
         Vector2 direction = new Vector2(1, 1);
         var hand = SpawnPrefab(handPrefab, ref direction);
         hand.GetComponent<Collider2D>().isTrigger = true;
+        direction.y = 0;
         hand.GetComponent<Boomerang>().ThrowBoomerang(direction, CharacterRigidBody, controllerData);
     }
 
