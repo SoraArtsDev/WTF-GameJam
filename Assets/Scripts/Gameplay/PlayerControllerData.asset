@@ -33,7 +33,7 @@ MonoBehaviour:
   hopHeight: 1.8
   hopTimeToApex: 0.3
   hopCutGravityMultiplier: 2.5
-  nextHopWaitTime: 1
+  nextHopWaitTime: 0.5
   hopDistanceX: 0.5
   hopDistanceY: 0.8
   jumpLandGravityMultiplier: 0

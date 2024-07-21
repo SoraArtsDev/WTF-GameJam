@@ -13,8 +13,6 @@ namespace Sora.Environment
 {
     public class DeathBox : MonoBehaviour
     {
-        [SerializeField] private Events.SoraEvent gameOverEvent;
-
         private void OnTriggerEnter2D(Collider2D collision)
         {
             Managers.GameManager.instance.OnGameOver(this, null);
