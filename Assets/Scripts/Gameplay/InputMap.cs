@@ -55,7 +55,7 @@ public partial class @InputMap: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""RemoveTorso"",
+                    ""name"": ""Interact"",
                     ""type"": ""Button"",
                     ""id"": ""c75dfc09-2ee2-481e-b4cf-f622d2bb0906"",
                     ""expectedControlType"": ""Button"",
@@ -67,6 +67,33 @@ public partial class @InputMap: IInputActionCollection2, IDisposable
                     ""name"": ""MoveObject"",
                     ""type"": ""Button"",
                     ""id"": ""a261e459-9509-425b-8eef-9f6f9c9503b1"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""ThrowObject"",
+                    ""type"": ""Button"",
+                    ""id"": ""735ad388-08b5-4b8a-ac38-f02f56ada8f7"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""DialougueNext"",
+                    ""type"": ""Button"",
+                    ""id"": ""1c23dbde-a5e4-459c-9f62-21c92eac9b2d"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""DialougueSkip"",
+                    ""type"": ""Button"",
+                    ""id"": ""50c0cff2-d65a-416e-bbdc-3abbbd5e90bd"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """",
@@ -235,18 +262,18 @@ public partial class @InputMap: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""RemoveTorso"",
+                    ""action"": ""Interact"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
                 {
                     ""name"": """",
                     ""id"": ""cd8e602e-d1fd-4a2d-ad21-b533f40b3419"",
-                    ""path"": ""<Keyboard>/shift"",
+                    ""path"": ""<Keyboard>/e"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""RemoveTorso"",
+                    ""action"": ""Interact"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -271,6 +298,72 @@ public partial class @InputMap: IInputActionCollection2, IDisposable
                     ""action"": ""MoveObject"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""9fd16990-d4bf-409e-903a-4d6e204046c1"",
+                    ""path"": ""<Gamepad>/buttonWest"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""ThrowObject"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""f87c1f31-e2ff-4c18-8b28-cf625d39aca5"",
+                    ""path"": ""<Keyboard>/o"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""ThrowObject"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""3be51b01-3af6-4d07-9c42-1a104ded171c"",
+                    ""path"": ""<Gamepad>/rightTrigger"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""DialougueNext"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""787051b7-b79e-4204-9a80-43951d78833d"",
+                    ""path"": ""<Keyboard>/tab"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""DialougueNext"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""b845ad73-4304-4766-b73a-4c016a5bd784"",
+                    ""path"": ""<Gamepad>/leftTrigger"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""DialougueSkip"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""76da9c86-d7f2-4d7c-88dc-e495d38dacd0"",
+                    ""path"": ""<Keyboard>/capsLock"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""DialougueSkip"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -282,8 +375,11 @@ public partial class @InputMap: IInputActionCollection2, IDisposable
         m_PlayerController_Movement = m_PlayerController.FindAction("Movement", throwIfNotFound: true);
         m_PlayerController_Jump = m_PlayerController.FindAction("Jump", throwIfNotFound: true);
         m_PlayerController_Dash = m_PlayerController.FindAction("Dash", throwIfNotFound: true);
-        m_PlayerController_RemoveTorso = m_PlayerController.FindAction("RemoveTorso", throwIfNotFound: true);
+        m_PlayerController_Interact = m_PlayerController.FindAction("Interact", throwIfNotFound: true);
         m_PlayerController_MoveObject = m_PlayerController.FindAction("MoveObject", throwIfNotFound: true);
+        m_PlayerController_ThrowObject = m_PlayerController.FindAction("ThrowObject", throwIfNotFound: true);
+        m_PlayerController_DialougueNext = m_PlayerController.FindAction("DialougueNext", throwIfNotFound: true);
+        m_PlayerController_DialougueSkip = m_PlayerController.FindAction("DialougueSkip", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -348,8 +444,11 @@ public partial class @InputMap: IInputActionCollection2, IDisposable
     private readonly InputAction m_PlayerController_Movement;
     private readonly InputAction m_PlayerController_Jump;
     private readonly InputAction m_PlayerController_Dash;
-    private readonly InputAction m_PlayerController_RemoveTorso;
+    private readonly InputAction m_PlayerController_Interact;
     private readonly InputAction m_PlayerController_MoveObject;
+    private readonly InputAction m_PlayerController_ThrowObject;
+    private readonly InputAction m_PlayerController_DialougueNext;
+    private readonly InputAction m_PlayerController_DialougueSkip;
     public struct PlayerControllerActions
     {
         private @InputMap m_Wrapper;
@@ -357,8 +456,11 @@ public partial class @InputMap: IInputActionCollection2, IDisposable
         public InputAction @Movement => m_Wrapper.m_PlayerController_Movement;
         public InputAction @Jump => m_Wrapper.m_PlayerController_Jump;
         public InputAction @Dash => m_Wrapper.m_PlayerController_Dash;
-        public InputAction @RemoveTorso => m_Wrapper.m_PlayerController_RemoveTorso;
+        public InputAction @Interact => m_Wrapper.m_PlayerController_Interact;
         public InputAction @MoveObject => m_Wrapper.m_PlayerController_MoveObject;
+        public InputAction @ThrowObject => m_Wrapper.m_PlayerController_ThrowObject;
+        public InputAction @DialougueNext => m_Wrapper.m_PlayerController_DialougueNext;
+        public InputAction @DialougueSkip => m_Wrapper.m_PlayerController_DialougueSkip;
         public InputActionMap Get() { return m_Wrapper.m_PlayerController; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -377,12 +479,21 @@ public partial class @InputMap: IInputActionCollection2, IDisposable
             @Dash.started += instance.OnDash;
             @Dash.performed += instance.OnDash;
             @Dash.canceled += instance.OnDash;
-            @RemoveTorso.started += instance.OnRemoveTorso;
-            @RemoveTorso.performed += instance.OnRemoveTorso;
-            @RemoveTorso.canceled += instance.OnRemoveTorso;
+            @Interact.started += instance.OnInteract;
+            @Interact.performed += instance.OnInteract;
+            @Interact.canceled += instance.OnInteract;
             @MoveObject.started += instance.OnMoveObject;
             @MoveObject.performed += instance.OnMoveObject;
             @MoveObject.canceled += instance.OnMoveObject;
+            @ThrowObject.started += instance.OnThrowObject;
+            @ThrowObject.performed += instance.OnThrowObject;
+            @ThrowObject.canceled += instance.OnThrowObject;
+            @DialougueNext.started += instance.OnDialougueNext;
+            @DialougueNext.performed += instance.OnDialougueNext;
+            @DialougueNext.canceled += instance.OnDialougueNext;
+            @DialougueSkip.started += instance.OnDialougueSkip;
+            @DialougueSkip.performed += instance.OnDialougueSkip;
+            @DialougueSkip.canceled += instance.OnDialougueSkip;
         }
 
         private void UnregisterCallbacks(IPlayerControllerActions instance)
@@ -396,12 +507,21 @@ public partial class @InputMap: IInputActionCollection2, IDisposable
             @Dash.started -= instance.OnDash;
             @Dash.performed -= instance.OnDash;
             @Dash.canceled -= instance.OnDash;
-            @RemoveTorso.started -= instance.OnRemoveTorso;
-            @RemoveTorso.performed -= instance.OnRemoveTorso;
-            @RemoveTorso.canceled -= instance.OnRemoveTorso;
+            @Interact.started -= instance.OnInteract;
+            @Interact.performed -= instance.OnInteract;
+            @Interact.canceled -= instance.OnInteract;
             @MoveObject.started -= instance.OnMoveObject;
             @MoveObject.performed -= instance.OnMoveObject;
             @MoveObject.canceled -= instance.OnMoveObject;
+            @ThrowObject.started -= instance.OnThrowObject;
+            @ThrowObject.performed -= instance.OnThrowObject;
+            @ThrowObject.canceled -= instance.OnThrowObject;
+            @DialougueNext.started -= instance.OnDialougueNext;
+            @DialougueNext.performed -= instance.OnDialougueNext;
+            @DialougueNext.canceled -= instance.OnDialougueNext;
+            @DialougueSkip.started -= instance.OnDialougueSkip;
+            @DialougueSkip.performed -= instance.OnDialougueSkip;
+            @DialougueSkip.canceled -= instance.OnDialougueSkip;
         }
 
         public void RemoveCallbacks(IPlayerControllerActions instance)
@@ -424,7 +544,10 @@ public partial class @InputMap: IInputActionCollection2, IDisposable
         void OnMovement(InputAction.CallbackContext context);
         void OnJump(InputAction.CallbackContext context);
         void OnDash(InputAction.CallbackContext context);
-        void OnRemoveTorso(InputAction.CallbackContext context);
+        void OnInteract(InputAction.CallbackContext context);
         void OnMoveObject(InputAction.CallbackContext context);
+        void OnThrowObject(InputAction.CallbackContext context);
+        void OnDialougueNext(InputAction.CallbackContext context);
+        void OnDialougueSkip(InputAction.CallbackContext context);
     }
 }

@@ -8,6 +8,15 @@ public class CharacterController2D : MonoBehaviour
 
     private const float DEAD_ZONE = 0.27f;
 
+    public enum EPickableType
+    {
+        ENONE,
+        EHEAD,
+        EHANDS,
+        ETORSO,
+        ELEGS,
+        ESLIME,
+    };
 
     public enum EPlayerState
     {
@@ -64,6 +73,8 @@ public class CharacterController2D : MonoBehaviour
     private bool isIdle;
     private bool isTorsoRemoved;
     private bool isTouchingDetachedTorso;
+    private bool isDraggingObject;
+    private bool isThrowingObject;
 
     public bool IsFacingRight { get; private set; }
 
@@ -86,19 +97,25 @@ public class CharacterController2D : MonoBehaviour
 
     private Vector2 colliderSize;
     private Vector2 soulMult;
+    private Vector3 prevPosition;
 
 
 
     //Detachables
+    public EPlayerState startingState;
     private SpriteRenderer spriteRenderer;
     public Sprite sprHead;
     public Sprite sprFullbody;
     public GameObject torsoPrefab;
-    public GameObject instantiatedTorso;
-    public float detachedTorsoCheckRadius;
+    public GameObject handPrefab;
+    private GameObject instantiatedTorso;
+    public float interactableTouchCheckRadius;
 
 
-
+    //Interactables
+    private Transform draggable;
+    private Transform pickable;
+    private float dragSpeedMultiplier;
 
     // Start is called before the first frame update
     void Awake()
@@ -106,12 +123,7 @@ public class CharacterController2D : MonoBehaviour
         CharacterRigidBody = GetComponent<Rigidbody2D>();
         spriteRenderer = GetComponent<SpriteRenderer>();
 
-        inputMap = new InputMap();
-        inputMap.PlayerController.Enable();
-        inputMap.PlayerController.Jump.started += OnJump;
-        //inputMap.PlayerController.Dash.started += OnDash;
-        inputMap.PlayerController.RemoveTorso.started += OnRemoveTorso;
-        inputMap.PlayerController.MoveObject.started += OnMoveObject;
+        EnsureInput();
 
         IsFacingRight = true;
         isJumping = false;
@@ -121,6 +133,8 @@ public class CharacterController2D : MonoBehaviour
         isDashPressed = false;
         isJumpReleased = false; 
         isDashEnabled = true;
+        isDraggingObject = false;
+        isThrowingObject = false;
 
         isRunning = false; ;
         isIdle = true;
@@ -131,10 +145,36 @@ public class CharacterController2D : MonoBehaviour
         lastOnGroundTime = 0.0f;
         lastJumpPressedTime = 0.0f;
         soulMult = Vector2.zero;
+        dragSpeedMultiplier = 1.0f;
 
         colliderSize = GetComponent<BoxCollider2D>().size;
+        SetPlayerState(startingState);
+        isTorsoRemoved = true;
+        var instantiatedTorso = GameObject.Find("torso");
+        if (instantiatedTorso)
+        {
+            var rb = instantiatedTorso.GetComponent<Rigidbody2D>();
+            rb.velocity = Vector2.zero;
+            rb.isKinematic = true;
+        }
     }
 
+
+    public void EnsureInput()
+    {
+        if (inputMap == null)
+        {
+            inputMap = new InputMap();
+            inputMap.PlayerController.Enable();
+            inputMap.PlayerController.Jump.started += OnJump;
+            //inputMap.PlayerController.Dash.started += OnDash;
+            inputMap.PlayerController.Interact.started += OnInteraction;
+            inputMap.PlayerController.MoveObject.canceled += OnMoveDone;
+            inputMap.PlayerController.MoveObject.started += OnMoveObject;
+            inputMap.PlayerController.ThrowObject.started += OnThrowObject;
+
+        }
+    }
 
     void OnJump(InputAction.CallbackContext context)
     {
@@ -148,47 +188,69 @@ public class CharacterController2D : MonoBehaviour
     }
 
 
-    void OnRemoveTorso(InputAction.CallbackContext context)
+    void OnInteraction(InputAction.CallbackContext context)
     {
-
-        if(isTorsoRemoved)
+        if(pickable)
         {
+            pickable.GetComponent<Pickables>().Consume();
+            return;
+        }
 
+        if (playerState == EPlayerState.ESOUL)
+        {
+            return;
+        }
+
+
+
+      /*if(playerState == EPlayerState.EHEAD)
+        {
             Vector3 distance = transform.position - instantiatedTorso.transform.position;
-            bool isTouching = distance.sqrMagnitude < detachedTorsoCheckRadius * detachedTorsoCheckRadius;
+            bool isTouching = distance.sqrMagnitude < interactableTouchCheckRadius * interactableTouchCheckRadius;
             if(!isTouching)
                 return;
         }
 
         isTorsoRemoved = !isTorsoRemoved;
-        if (isTorsoRemoved)
+        if (isTorsoRemoved && playerState == EPlayerState.ETORSO)
         {
-            GetComponent<BoxCollider2D>().size = new Vector2(colliderSize.x, colliderSize.y / 2);
-            hitOffset = hitOffsetHead;
-            spriteRenderer.sprite = sprHead;
-            playerState = EPlayerState.EHEAD;
-
+            Vector2 direction = new Vector2(moveInput.x * 0.1f, 1);
+            Vector3 spawnPoint = new Vector3(direction.x, 0, 0);
+            spawnPoint += transform.position;
+            direction.Normalize();
+            instantiatedTorso = GameObject.Instantiate(torsoPrefab, spawnPoint, Quaternion.identity);
+            float force = Random.Range(1.5f, controllerData.torsoThrowForce);
+            float torque = Random.Range(.1f, controllerData.torsoThrowTorque);
+            instantiatedTorso.GetComponent<Rigidbody2D>().AddForce(direction * force, ForceMode2D.Impulse);
+            instantiatedTorso.GetComponent<Rigidbody2D>().AddTorque(torque, ForceMode2D.Impulse);
         }
-        else
-        {
-            GetComponent<BoxCollider2D>().size = new Vector2(colliderSize.x, colliderSize.y);
-            hitOffset = originalOffset;
-            spriteRenderer.sprite = sprFullbody;
-            playerState = EPlayerState.ETORSO;
-        }
-        ConfigureTorso();
+        ConfigureTorso(isTorsoRemoved);*/
     }
-
 
     void OnMoveObject(InputAction.CallbackContext context)
     {
-       // Vector3 distance = transform.position - instantiatedTorso.transform.position;
-       // bool isTouching = distance.sqrMagnitude < detachedTorsoCheckRadius * detachedTorsoCheckRadius;
-       // if (!isTouching)
-       //     return;
+        if (playerState != EPlayerState.E_FULL_BODY)
+            return;
+
+        if(draggable)
+        {
+            isDraggingObject = true;
+            Debug.Log("OnMoveObject");
+        }
+    }
+    
+    void OnMoveDone(InputAction.CallbackContext context)
+    {
+        isDraggingObject = false;
+        Debug.Log("OnMoveDone");
+        draggable = null;
     }
 
-
+    void OnThrowObject(InputAction.CallbackContext context)
+    {
+        isThrowingObject = true;
+    }
+    
     // Update is called once per frame
     void Update()
     {
@@ -200,7 +262,8 @@ public class CharacterController2D : MonoBehaviour
         if(playerState== EPlayerState.ESOUL)
         {
             moveInput = inputMap.PlayerController.Movement.ReadValue<Vector2>();
-
+            if (moveInput.x != 0)
+                SwitchPlayerDirection(moveInput.x > 0);
             Vector3 pos = transform.position;
             CharacterRigidBody.MovePosition(new Vector2(pos.x + soulMult.x*moveInput.x*controllerData.speedXForSoul * Time.deltaTime, pos.y + soulMult.y * moveInput.y * controllerData.speedXForSoul * Time.deltaTime));
             SetGravityScale(controllerData.soulGravityMultiplier);
@@ -227,18 +290,24 @@ public class CharacterController2D : MonoBehaviour
         Vector3 lineEnd = lineStart + Vector3.down * hitDistance;
         Debug.DrawLine(lineStart, lineEnd, Color.red);
 
-        if (isTorsoRemoved)
+        if (instantiatedTorso)
         {
-            //DrawCircle(new Vector2(instantiatedTorso.transform.position.x, instantiatedTorso.transform.position.y), detachedTorsoCheckRadius, 36);
+            //DrawCircle(new Vector2(instantiatedTorso.transform.position.x, instantiatedTorso.transform.position.y), interactableTouchCheckRadius, 36);
             Vector3 distance = transform.position - instantiatedTorso.transform.position;
-            bool isTouching = distance.sqrMagnitude < detachedTorsoCheckRadius * detachedTorsoCheckRadius;
+            bool isTouching = distance.sqrMagnitude < interactableTouchCheckRadius * interactableTouchCheckRadius;
 
-            DrawWireCircle(instantiatedTorso.transform.position, instantiatedTorso.transform.rotation, detachedTorsoCheckRadius, isTouching? Color.green : Color.white);
+            DebugDraw.DrawWireCircle(instantiatedTorso.transform.position, instantiatedTorso.transform.rotation, interactableTouchCheckRadius, isTouching? Color.green : Color.white);
+        }
+
+        if (draggable)
+        {
+            Vector3 distance = transform.position - draggable.position;
+            bool isTouching = distance.sqrMagnitude < interactableTouchCheckRadius * interactableTouchCheckRadius;
+            DebugDraw.DrawWireCircle(draggable.position, draggable.rotation, interactableTouchCheckRadius, isTouching ? Color.red : Color.white);
         }
 
 #endif
-
-        if (isTorsoRemoved)
+        if (isTorsoRemoved && instantiatedTorso)
         {
             var rb = instantiatedTorso.GetComponent<Rigidbody2D>();
             if (Mathf.Approximately(rb.velocity.y , 0.0f))
@@ -248,8 +317,26 @@ public class CharacterController2D : MonoBehaviour
             } 
         }
 
-            //Check if Grounded
-            if (!isJumping)
+        if(isThrowingObject)
+        {
+            Vector2 direction = new Vector2(moveInput.x * 0.1f, 1);
+            Vector3 spawnPoint = new Vector3(direction.x, 0, 0);
+            spawnPoint += transform.position;
+            direction.Normalize();
+            var hand = GameObject.Instantiate(handPrefab, spawnPoint, Quaternion.identity);
+            float len = moveInput.sqrMagnitude;
+            direction = moveInput;
+            if (Mathf.Approximately(len, 0.0f))
+            {
+                direction = IsFacingRight ? Vector2.right : Vector2.left;
+            }
+
+            hand.GetComponent<Boomerang>().ThrowBoomerang(direction, CharacterRigidBody,controllerData);
+            isThrowingObject = false;
+        }
+
+        //Check if Grounded
+        if (!isJumping && !isDraggingObject)
         {
             if (CheckIfGrounded())
             {
@@ -321,7 +408,7 @@ public class CharacterController2D : MonoBehaviour
         }
 
         isRunning = Mathf.Abs(CharacterRigidBody.velocity.x) > 0;
-        isIdle = !isRunning && !isJumping && !isJumpFalling && !isJumpCut && lastOnGroundTime > 0.1f;
+        isIdle = !isDraggingObject && !isRunning && !isJumping && !isJumpFalling && !isJumpCut && lastOnGroundTime > 0.1f;
         #endregion
     }
 
@@ -333,7 +420,7 @@ public class CharacterController2D : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (playerState == EPlayerState.EHEAD)
+        if (playerState == EPlayerState.EHEAD || playerState == EPlayerState.E_FULL_BODY)
             Run();
         else if (playerState == EPlayerState.ETORSO && CanHop())
         {
@@ -374,7 +461,16 @@ public class CharacterController2D : MonoBehaviour
         if (isDashing)
             return;
 
-        //calculate the direction we want to run to
+        dragSpeedMultiplier = 1.0f;
+        if (isDraggingObject && draggable)
+        {
+            Vector3 pos = transform.position;
+            draggable.position = new Vector3(draggable.position.x + moveInput.x * controllerData.speedForDrag * Time.deltaTime, draggable.position.y, 0);
+
+            bool isPush = (moveInput.x > 0 && draggable.position.x > transform.position.x) || (moveInput.x< 0 && draggable.position.x < transform.position.x);
+            dragSpeedMultiplier = isPush ? controllerData.dragSpeedPushMultiplier : controllerData.dragSpeedPullMultiplier;
+        }
+            //calculate the direction we want to run to
         float targetSpeed = moveInput.x * controllerData.maxRunSpeed;
 
         #region Calculate AccelRate
@@ -386,6 +482,7 @@ public class CharacterController2D : MonoBehaviour
 
         #endregion
 
+        accelRate *= dragSpeedMultiplier;
         if (controllerData.softLanding && CharacterRigidBody.velocity.y < controllerData.jumpLandTimeThreshold)
         {
 
@@ -407,7 +504,6 @@ public class CharacterController2D : MonoBehaviour
          * RigidBody.velocity = new Vector2(RRigidBodyB.velocity.x + (Time.fixedDeltaTime  * speedDif * accelRate) / RB.mass, RB.velocity.y);
 		 * Time.fixedDeltaTime is by default in Unity 0.02 seconds equal to 50 FixedUpdate() calls per second
          */
-
     }
 
     //imitating Jump as Hop
@@ -512,12 +608,12 @@ public class CharacterController2D : MonoBehaviour
 
     private bool CanJump()
     {
-        return !isJumping && lastOnGroundTime > 0.0f && playerState != EPlayerState.EHEAD && playerState != EPlayerState.ETORSO;
+        return !isDraggingObject && !isJumping && lastOnGroundTime > 0.0f && playerState != EPlayerState.EHEAD && playerState != EPlayerState.ETORSO;
     }
 
     private bool CanHop()
     {
-        return !isJumping && lastOnGroundTime > 0.0f && hopWaitTime < 0.0f && playerState == EPlayerState.ETORSO;
+        return !isDraggingObject && !isJumping && lastOnGroundTime > 0.0f && hopWaitTime < 0.0f && playerState == EPlayerState.ETORSO;
     }
 
     private bool CanDash()
@@ -526,23 +622,26 @@ public class CharacterController2D : MonoBehaviour
     }
 
 
-    private void ConfigureTorso()
+    private void ConfigureTorso(bool isTorsoRemoved)
     {
         if (isTorsoRemoved)
         {
-            Vector2 direction = new Vector2(moveInput.x * 0.1f , 1);
-            Vector3 spawnPoint = new Vector3(direction.x, 0, 0);
-            spawnPoint += transform.position;
-            direction.Normalize();
-            instantiatedTorso = GameObject.Instantiate(torsoPrefab, spawnPoint, Quaternion.identity);
-            float force = Random.Range(1.5f,controllerData.torsoThrowForce);
-            float torque = Random.Range(.1f,controllerData.torsoThrowTorque);
-            instantiatedTorso.GetComponent<Rigidbody2D>().AddForce(direction * force, ForceMode2D.Impulse);
-            instantiatedTorso.GetComponent<Rigidbody2D>().AddTorque(torque, ForceMode2D.Impulse);
+            GetComponent<BoxCollider2D>().size = new Vector2(colliderSize.x, colliderSize.y / 2);
+            hitOffset = hitOffsetHead;
+            spriteRenderer.sprite = sprHead;
+            playerState = EPlayerState.EHEAD;
         }
         else
         {
-            GameObject.Destroy(instantiatedTorso);
+            GetComponent<BoxCollider2D>().size = new Vector2(colliderSize.x, colliderSize.y);
+            hitOffset = originalOffset;
+            spriteRenderer.sprite = sprFullbody;
+            playerState = EPlayerState.ETORSO;
+
+            if (instantiatedTorso)
+            {
+                GameObject.Destroy(instantiatedTorso);
+            }
         }
     }
 
@@ -559,50 +658,6 @@ public class CharacterController2D : MonoBehaviour
         return false;
     }
 
-    public const float TAU = 6.283185307179586f;
-    public static Vector2 GetUnitVectorByAngle(float angleRad)
-    {
-        return new Vector2(Mathf.Cos(angleRad), Mathf.Sin(angleRad));
-    }
-
-    void DrawCircle(Vector2 center, float radius, int segments)
-    {
-        float angle = 0f;
-        for (int i = 0; i < segments; i++)
-        {
-            float x = Mathf.Cos(Mathf.Deg2Rad * angle) * radius;
-            float y = Mathf.Sin(Mathf.Deg2Rad * angle) * radius;
-            Vector2 start = center + new Vector2(x, y);
-
-            angle += 360f / segments;
-
-            x = Mathf.Cos(Mathf.Deg2Rad * angle) * radius;
-            y = Mathf.Sin(Mathf.Deg2Rad * angle) * radius;
-            Vector2 end = center + new Vector2(x, y);
-
-            Debug.DrawLine(start, end, Color.red, 1f);
-        }
-    }
-
-    public static void DrawWireCircle(Vector3 pos, Quaternion rot, float radius, Color color, int detail = 32)
-    {
-        Vector3[] points3D = new Vector3[detail];
-        for (int i = 0; i < detail; ++i)
-        {
-            float t = (float)(i) / detail;
-            float angRad = TAU * t;
-            Vector2 points2D = GetUnitVectorByAngle(angRad);
-            points2D *= radius;
-            points3D[i] = pos + rot * points2D;
-        }
-
-        for (int i = 0; i < detail - 1; ++i)
-        {
-            Debug.DrawLine(points3D[i], points3D[i + 1],color);
-        }
-        Debug.DrawLine(points3D[detail - 1], points3D[0],color);
-    }
-
     private void SetGravityScale(float scale)
     {
         CharacterRigidBody.gravityScale = scale;
@@ -611,11 +666,27 @@ public class CharacterController2D : MonoBehaviour
 
     public void SetSoulMult(int multX=0, int multY = 0)
     {
-        soulMult = new Vector2(multX, multX);
+        soulMult = new Vector2(multX, multY);
     }
 
     public void SetPlayerState(EPlayerState state)
     {
         playerState = state;
+        if(playerState == EPlayerState.EHEAD)
+        {
+            ConfigureTorso(true);
+        } else if(playerState == EPlayerState.ETORSO)
+        {
+            ConfigureTorso(false);
+        }
+    }
+
+    public void SetDraggable(Transform draggableObj) {
+        draggable = draggableObj;
+    }
+
+    public void SetPickable(Transform pickableObj) {
+
+        pickable = pickableObj;
     }
 }

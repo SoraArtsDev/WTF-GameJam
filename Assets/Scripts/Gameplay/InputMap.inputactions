@@ -33,7 +33,7 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "RemoveTorso",
+                    "name": "Interact",
                     "type": "Button",
                     "id": "c75dfc09-2ee2-481e-b4cf-f622d2bb0906",
                     "expectedControlType": "Button",
@@ -45,6 +45,33 @@
                     "name": "MoveObject",
                     "type": "Button",
                     "id": "a261e459-9509-425b-8eef-9f6f9c9503b1",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "ThrowObject",
+                    "type": "Button",
+                    "id": "735ad388-08b5-4b8a-ac38-f02f56ada8f7",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "DialougueNext",
+                    "type": "Button",
+                    "id": "1c23dbde-a5e4-459c-9f62-21c92eac9b2d",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "DialougueSkip",
+                    "type": "Button",
+                    "id": "50c0cff2-d65a-416e-bbdc-3abbbd5e90bd",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
@@ -213,18 +240,18 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "RemoveTorso",
+                    "action": "Interact",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
                 {
                     "name": "",
                     "id": "cd8e602e-d1fd-4a2d-ad21-b533f40b3419",
-                    "path": "<Keyboard>/shift",
+                    "path": "<Keyboard>/e",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "RemoveTorso",
+                    "action": "Interact",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -247,6 +274,72 @@
                     "processors": "",
                     "groups": "",
                     "action": "MoveObject",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "9fd16990-d4bf-409e-903a-4d6e204046c1",
+                    "path": "<Gamepad>/buttonWest",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "ThrowObject",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "f87c1f31-e2ff-4c18-8b28-cf625d39aca5",
+                    "path": "<Keyboard>/o",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "ThrowObject",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "3be51b01-3af6-4d07-9c42-1a104ded171c",
+                    "path": "<Gamepad>/rightTrigger",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "DialougueNext",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "787051b7-b79e-4204-9a80-43951d78833d",
+                    "path": "<Keyboard>/tab",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "DialougueNext",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "b845ad73-4304-4766-b73a-4c016a5bd784",
+                    "path": "<Gamepad>/leftTrigger",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "DialougueSkip",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "76da9c86-d7f2-4d7c-88dc-e495d38dacd0",
+                    "path": "<Keyboard>/capsLock",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "DialougueSkip",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
