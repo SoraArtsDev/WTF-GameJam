@@ -395,6 +395,48 @@ TextureImporter:
       indices: 
       edges: []
       weights: []
+    - serializedVersion: 2
+      name: Forest Tiles_13
+      rect:
+        serializedVersion: 2
+        x: 97
+        y: 32
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d16eca8bae3acd24281cb40bca50f088
+      internalID: 896345949
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Forest Tiles_14
+      rect:
+        serializedVersion: 2
+        x: 127
+        y: 32
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e77cd7c9c7ee2064881fd917373aa193
+      internalID: 700449889
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     physicsShape: []
     bones: []
@@ -411,6 +453,8 @@ TextureImporter:
       Forest Tiles_10: -1202678535
       Forest Tiles_11: -1156419913
       Forest Tiles_12: 1005820250
+      Forest Tiles_13: 896345949
+      Forest Tiles_14: 700449889
       Forest Tiles_2: -1669511864
       Forest Tiles_3: -1406043119
       Forest Tiles_4: -93064818

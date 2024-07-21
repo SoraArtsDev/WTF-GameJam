@@ -437,6 +437,48 @@ TextureImporter:
       indices: 
       edges: []
       weights: []
+    - serializedVersion: 2
+      name: Ship_Tiles_15
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 96
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 726ad07201465aa45a2373f8c65a265c
+      internalID: 1938203310
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ship_Tiles_16
+      rect:
+        serializedVersion: 2
+        x: 16
+        y: 16
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8ba258ca6d37aa8468e192949c64b27c
+      internalID: 731330617
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     physicsShape: []
     bones: []
@@ -455,6 +497,8 @@ TextureImporter:
       Ship_Tiles_12: 781795294
       Ship_Tiles_13: 437202540
       Ship_Tiles_14: -494087487
+      Ship_Tiles_15: 1938203310
+      Ship_Tiles_16: 731330617
       Ship_Tiles_2: 1896574973
       Ship_Tiles_3: -1712224140
       Ship_Tiles_4: 360220705
