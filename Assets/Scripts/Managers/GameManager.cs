@@ -15,8 +15,9 @@ namespace Sora.Managers
 {
     public class GameManager : Singleton<GameManager>
     {
-        int[] slimeCount = { 1, 1, 2 };
+        int[] slimeCount = { 1, 1, 2, 2 };
         int currentSlimeCount = 0;
+        public int reloadLevelIndex;
 
         [SerializeField] private BoolVariable isGameOver;
 
@@ -59,7 +60,7 @@ namespace Sora.Managers
         {
             isGameOver.value = true;
             Application.Quit();
-            SceneManager.instance.LoadGameScene(2);
+            SceneManager.instance.LoadScene(reloadLevelIndex);
         }
     }
 }
