@@ -16,6 +16,10 @@ public class Pickables : MonoBehaviour
         controller = GameObject.Find("player").GetComponent<CharacterController2D>();
     }
 
+    private void Awake()
+    {
+        controller = GameObject.Find("player").GetComponent<CharacterController2D>();
+    }
     // Update is called once per frame
     void Update()
     {
