@@ -124,6 +124,7 @@ public class CharacterController2D : MonoBehaviour
     private SpriteRenderer spriteRenderer;
     public Sprite sprHead;
     public Sprite sprFullbody;
+    public Sprite sprInteract;
     public GameObject torsoPrefab;
     public GameObject handPrefab;
     private GameObject instantiatedTorso;
@@ -318,8 +319,16 @@ public class CharacterController2D : MonoBehaviour
                     animator.SetTrigger("jump");
                 }
                 break;
-            case EAnimationState.EHANDDETACH:
+            case EAnimationState.EPULL:
                 {
+                   // spriteRenderer.sprite = sprInteract;
+                    animator.SetBool("interacting",true);
+                }
+                break;
+            case EAnimationState.EHANDDETACH:
+                { 
+                    // spriteRenderer.sprite = sprInteract;
+                    animator.SetTrigger("detachHand");
                 }
                 break;
             default: break;
@@ -424,11 +433,16 @@ public class CharacterController2D : MonoBehaviour
     {
         isDraggingObject = false;
         draggable = null;
+
+        animator.StopPlayback();
+        animator.SetBool("interacting", false);
+        animator.SetBool("move", false);
     }
 
     void OnThrowObject(InputAction.CallbackContext context)
     {
         isThrowingObject = true;
+        SetPlayerAnimationState(EAnimationState.EHANDDETACH);
 
     }
     
@@ -492,10 +506,12 @@ public class CharacterController2D : MonoBehaviour
         if (isTorsoDetached && instantiatedTorso)
         {
             var rb = instantiatedTorso.GetComponent<Rigidbody2D>();
+            var col2d = instantiatedTorso.GetComponent<Collider2D>();
             if (Mathf.Approximately(rb.velocity.y , 0.0f))
             {
                 rb.velocity = Vector2.zero;
                 rb.isKinematic = true;
+                col2d.isTrigger = true;
                 instantiatedTorso = null;
             } 
         }
@@ -581,7 +597,7 @@ public class CharacterController2D : MonoBehaviour
         }
 
         isRunning = Mathf.Abs(CharacterRigidBody.velocity.x) > 0;
-        isIdle = !isDraggingObject && !isRunning && !isJumping && !isJumpFalling && !isJumpCut && lastOnGroundTime > 0.1f;
+        isIdle = !isThrowingObject && !isDraggingObject && !isRunning && !isJumping && !isJumpFalling && !isJumpCut && lastOnGroundTime > 0.1f;
         if(!isJumpFalling && !isJumping)
         {
             EAnimationState state = isRunning ? (playerState == EPlayerState.ETORSO? EAnimationState.EHOP: EAnimationState.EMOVING) : EAnimationState.EIDLE;
@@ -624,9 +640,13 @@ public class CharacterController2D : MonoBehaviour
 
     private void SwitchPlayerDirection(bool facingTowardsRight)
     {
-        if (facingTowardsRight == IsFacingRight)
+        if (facingTowardsRight == IsFacingRight && !isDraggingObject)
             return;
 
+        if(IsFacingRight && isDraggingObject)
+        {
+            return;
+        }
 
         Vector3 scale = transform.localScale;
         scale.x *= -1;
