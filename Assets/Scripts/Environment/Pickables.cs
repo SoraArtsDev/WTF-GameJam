@@ -83,6 +83,7 @@ public class Pickables : MonoBehaviour
             default:break;
         }
 
+        Sora.Managers.AudioManager.instance.PlaySFX(EAudioType.MERGE);
         GameObject.Destroy(gameObject);
 
     }

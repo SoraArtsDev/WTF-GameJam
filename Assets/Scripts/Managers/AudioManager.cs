@@ -9,12 +9,24 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum EAudioType
+{
+    JUMP,
+    THROW,
+    HOP,
+    RIP,
+    MERGE,
+    SPLIT,
+}
+
 namespace Sora.Managers
 {
     [RequireComponent(typeof(AudioSource))]
     public class AudioManager : Singleton<AudioManager>
     {
-        [SerializeField] private SerializedDictionary<string, AudioClip> audioClips = new SerializedDictionary<string, AudioClip>();
+        [SerializeField] private SerializedDictionary<string, AudioClip> bgMusic = new SerializedDictionary<string, AudioClip>();
+        [SerializeField] private SerializedDictionary<EAudioType, AudioClip>sfx = new SerializedDictionary<EAudioType, AudioClip>();
+
         private AudioSource audioSource;
 
         private void OnEnable()
@@ -30,21 +42,18 @@ namespace Sora.Managers
 
         private void PlayMusic()
         {
-            if (audioClips.ContainsKey("theme"))
+            if (bgMusic.ContainsKey("theme"))
             {
-                audioSource.clip = audioClips["theme"];
+                audioSource.clip = bgMusic["theme"];
                 audioSource.Play();
             }
             else
                 Debug.Log("AudioManager:: Theme song not added. Make sure the clip is added or the clip's name matches the following: \"theme\".");
         }
 
-        public void PlaySFX(string clipName)
+        public void PlaySFX(EAudioType type)
         {
-            if (audioClips.ContainsKey(clipName))
-                audioSource.PlayOneShot(audioClips[clipName]);
-            else
-                Debug.Log("AudioManager:: Audio Clip name mismatch. The clip name you provided does not exist.");
+            audioSource.PlayOneShot(sfx[type]);
         }
 
         public void PauseBackgroundMusic()

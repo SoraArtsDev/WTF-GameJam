@@ -426,6 +426,7 @@ public class CharacterController2D : MonoBehaviour
                 break;
             default: break;
         }
+        Sora.Managers.AudioManager.instance.PlaySFX(EAudioType.SPLIT);
     }
 
 
@@ -726,6 +727,8 @@ public class CharacterController2D : MonoBehaviour
             lastJumpPressedTime = controllerData.jumpPressBufferTime;
             CharacterRigidBody.AddForce(xforce * Vector2.right, ForceMode2D.Impulse);
             CharacterRigidBody.AddForce(yforce * Vector2.up, ForceMode2D.Impulse);
+
+            Sora.Managers.AudioManager.instance.PlaySFX(EAudioType.HOP);
         }
     }
 
@@ -752,6 +755,7 @@ public class CharacterController2D : MonoBehaviour
             Debug.Log("OnJump");
             CharacterRigidBody.AddForce(controllerData.jumpForce * Vector2.up, ForceMode2D.Impulse);
             SetPlayerAnimationState(EAnimationState.EJUMP);
+            Sora.Managers.AudioManager.instance.PlaySFX(EAudioType.JUMP);
         }
 
     }
@@ -900,11 +904,14 @@ public class CharacterController2D : MonoBehaviour
         hand.GetComponent<Collider2D>().isTrigger = true;
         direction.y = 0;
         hand.GetComponent<Boomerang>().ThrowBoomerang(direction, CharacterRigidBody, controllerData);
+        Sora.Managers.AudioManager.instance.PlaySFX(EAudioType.RIP);
+       
     }
 
     public void DoneThrowingHand()
     {
         animator.SetBool("throwHand", false);
         isThrowingObject = false;
+        Sora.Managers.AudioManager.instance.PlaySFX(EAudioType.THROW);
     }
 }
