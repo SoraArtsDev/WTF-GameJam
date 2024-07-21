@@ -92,7 +92,7 @@ namespace Sora.DialogueSystem
 
         void OnSkip(InputAction.CallbackContext context)
         {
-            if (dialogueCanvas.activeSelf)
+            if (dialogueCanvas && dialogueCanvas.activeSelf)
             {
                 StopCoroutine(dialogueCoroutine);
                 dialogueCanvas.SetActive(false);
