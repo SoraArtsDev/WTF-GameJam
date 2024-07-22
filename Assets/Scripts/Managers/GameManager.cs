@@ -46,7 +46,7 @@ namespace Sora.Managers
 
         private void OnEnable()
         {
-            DontDestroyOnLoad(gameObject);
+
         }
 
         public void LoadGameScene()

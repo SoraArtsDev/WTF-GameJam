@@ -31,12 +31,14 @@ namespace Sora.Managers
 
         private void OnEnable()
         {
-            DontDestroyOnLoad(gameObject);
+
         }
 
         private void Start()
         {
             audioSource = GetComponent<AudioSource>();
+
+            audioSource.volume = PlayerPrefs.GetFloat("music", 0.2f);
             PlayMusic();            
         }
 
@@ -69,6 +71,12 @@ namespace Sora.Managers
         public void SetBackgroundVolume(float volume)
         {
             audioSource.volume = volume;
+        }
+
+        public void MuteMusic()
+        {
+            audioSource.volume = 0.0f;
+            PlayerPrefs.SetFloat("music", 0.0f);
         }
     }
 }
