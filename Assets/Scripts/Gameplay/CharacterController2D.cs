@@ -87,6 +87,7 @@ public class CharacterController2D : MonoBehaviour
     private bool isRunning;
     private bool isIdle;
     private bool isTorsoDetached;
+    private bool isLegsDetached;
     private bool isTouchingDetachedTorso;
     private bool isDraggingObject;
     private bool isThrowingObject;
@@ -154,6 +155,7 @@ public class CharacterController2D : MonoBehaviour
         isJumping = false;
         isDashing = false;
         isTorsoDetached = false;
+        isLegsDetached = false;
         isTouchingDetachedTorso = false;
         isDashPressed = false;
         isJumpReleased = false; 
@@ -184,6 +186,7 @@ public class CharacterController2D : MonoBehaviour
     public void ConfigurePlayerState()
     {
         isTorsoDetached = false;
+        isLegsDetached = false;
         SetPlayerAnimatorLayer();
         SetPlayerAnimationState(EAnimationState.EIDLE);
 
@@ -200,13 +203,18 @@ public class CharacterController2D : MonoBehaviour
                     isTorsoDetached = true;
                     GetComponent<BoxCollider2D>().size = new Vector2(headColliderSize.x, headColliderSize.y);
                     hitOffset = hitOffsetHead;
+                    //this means we are expecting torso somehwere as pcikable in level
+                    instantiatedTorso = GameObject.Find("Torso");
                     //spriteRenderer.sprite = sprHead;
                 }
                 break;
             case EPlayerState.ETORSO:
                 {
+                    isTorsoDetached = true;
                     GetComponent<BoxCollider2D>().size = new Vector2(colliderSize.x, colliderSize.y);
                     hitOffset = hitOffsetTorso;
+                    //this means we are expecting torso somehwere as pcikable in level
+                    instantiatedTorso = GameObject.Find("Legs");
                     //spriteRenderer.sprite = sprFullbody;
                 }
                 break;
@@ -224,11 +232,6 @@ public class CharacterController2D : MonoBehaviour
                 }
                 break;
             default: break;
-        }
-        if (isTorsoDetached)
-        {
-            //this means we are expecting torso somehwere as pcikable in level
-            instantiatedTorso = GameObject.Find("Torso");
         }
     }
 
@@ -370,13 +373,12 @@ public class CharacterController2D : MonoBehaviour
     {
         if (pickable)
         {
-            pickable.GetComponent<Pickables>().Consume();
-
-            if (pickable.TryGetComponent<Pickables>(out Pickables pick))
+            var pick = pickable.GetComponent<Pickables>();
+            if(pick && pick.pickableType == EPickableType.EHEAD && picked)
             {
-                if(pick.pickableType == EPickableType.EHEAD && picked)
-                    picked.InvokeEvent();
+                picked.InvokeEvent();
             }
+            pickable.GetComponent<Pickables>().Consume();
             return;
         }
 
@@ -399,6 +401,7 @@ public class CharacterController2D : MonoBehaviour
                     instantiatedTorso.name = "Torso";
                     float force = Random.Range(1.5f, controllerData.torsoThrowForce);
                     //float torque = Random.Range(.1f, controllerData.torsoThrowTorque);
+                    CharacterRigidBody.GetComponent<Rigidbody2D>().AddForce(-direction * force, ForceMode2D.Impulse);
                     instantiatedTorso.GetComponent<Rigidbody2D>().AddForce(direction * force, ForceMode2D.Impulse);
                     SetPlayerState(EPlayerState.EHEAD);
                     hasWaitTime = true;
@@ -413,11 +416,12 @@ public class CharacterController2D : MonoBehaviour
             case EPlayerState.E_FULL_BODY:
                 {
                     //detach and seplayerState to EHEAD
-                    Vector2 direction = new Vector2(moveInput.x * 0.1f, 1);
+                    Vector2 direction = new Vector2(moveInput.x * 0.1f,1);
                     instantiatedTorso = SpawnPrefab(torsoPrefab, ref direction);
-                    instantiatedTorso.name = "Torso";
+                    instantiatedTorso.name = "Legs";
                     float force = Random.Range(1.5f, controllerData.torsoThrowForce);
                     //float torque = Random.Range(.1f, controllerData.torsoThrowTorque);
+                    CharacterRigidBody.GetComponent<Rigidbody2D>().AddForce(-direction * force, ForceMode2D.Impulse);
                     instantiatedTorso.GetComponent<Rigidbody2D>().AddForce(direction * force, ForceMode2D.Impulse);
                     SetPlayerState(EPlayerState.ETORSO);
                     hasWaitTime = true;
@@ -718,6 +722,9 @@ public class CharacterController2D : MonoBehaviour
     //imitating Jump as Hop
     private void Hop()
     {
+        if (hasWaitTime)
+            return;
+
         {
             isJumping = true;
             isJumpFalling = false;
@@ -889,9 +896,9 @@ public class CharacterController2D : MonoBehaviour
     GameObject SpawnPrefab(GameObject prefab, ref Vector2 direction)
     {
         direction = IsFacingRight ? Vector2.right : Vector2.left;
-        direction = new Vector2(direction.x, 1);
+        direction = new Vector2(direction.x, 0);
         direction.Normalize();
-        Vector3 spawnPoint = new Vector3(direction.x *.5f, direction.y * .5f, 0);
+        Vector3 spawnPoint = new Vector3(direction.x *.5f, 0, 0);
         spawnPoint += transform.position;
         var go = GameObject.Instantiate(prefab, spawnPoint, Quaternion.identity);
         return go;

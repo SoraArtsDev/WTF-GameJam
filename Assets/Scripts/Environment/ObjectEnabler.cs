@@ -25,7 +25,10 @@ namespace Sora
         {
             if (collision.CompareTag("Player"))
             {
-                objectToEnable.SetActive(true);
+                if (objectToEnable)
+                {
+                    objectToEnable.SetActive(true);
+                }
                 onCollision.InvokeEvent();
             }
         }
