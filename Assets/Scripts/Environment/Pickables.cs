@@ -43,7 +43,7 @@ public class Pickables : MonoBehaviour
     {
         if (collision.CompareTag("Player"))
         {
-            if (controller.GetPickable() == this)
+            if (controller.GetPickable() == transform)
                 controller.SetPickable(null);
         }
     }

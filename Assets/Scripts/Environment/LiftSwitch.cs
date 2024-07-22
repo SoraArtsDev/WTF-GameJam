@@ -25,7 +25,7 @@ namespace Sora.Environment
         private Vector3 initialPos;
         private float currentTime;
 
-        private void OnEnable()
+        private void Start()
         {
             player = FindObjectOfType<CharacterController2D>();
             player.inputMap.PlayerController.Interact.started += OnInteraction;
@@ -63,16 +63,16 @@ namespace Sora.Environment
 
         private IEnumerator MoveLift()
         {
-            while(Vector3.Distance(lift.transform.position, moveBetween[wpIndex].position) > 0.01f)
+            while(currentTime <= timeToReach)
             {
-                lift.transform.position = Vector3.Lerp(initialPos, moveBetween[wpIndex].position, currentTime / timeToReach);
+                lift.transform.localPosition = Vector3.Lerp(initialPos, moveBetween[wpIndex].position, currentTime / timeToReach);
 
                 currentTime += Time.deltaTime;
 
                 yield return null;
             }
 
-            lift.transform.position = moveBetween[wpIndex].position;
+            lift.transform.localPosition = moveBetween[wpIndex].position;
             currentTime = 0.0f;
             initialPos = moveBetween[wpIndex].position;
             wpIndex++;
